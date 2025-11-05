@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>未來科技 | 智能安防與網路解決方案</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-dark-bg: #0A0A0A; /* 深黑背景 */
+            --color-primary: #00FFFF; /* 亮青色/電光藍 (強調色) */
+            --color-secondary: #0077B6; /* 深藍色 (輔助色) */
+            --color-text-light: #F0F0F0; /* 淺色文字 */
+            --color-text-dim: #AAAAAA; /* 昏暗文字 */
+            --header-height: 80px; /* 定義 Header 預設高度 */
+        }
+
+        /* 基礎樣式重置與字體 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--color-dark-bg);
+            color: var(--color-text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            /* 調整 Header 滑動時，主內容不會被 Header 覆蓋 */
+            padding-top: var(--header-height); 
+        }
+        
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.3s, opacity 0.3s, transform 0.1s;
+        }
+        a:hover {
+            color: white;
+            opacity: 0.8;
+        }
+        a:active {
+            transform: scale(0.98);
+            opacity: 0.6;
+        }
+
+        /* 容器與佈局 */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Section 高度縮短優化 */
+        section {
+            padding: 50px 0;
+            position: relative;
+        }
+
+        /* ==================================== */
+        /* 導航列 (Header) 樣式 - 單欄佈局與捲動效果 */
+        /* ==================================== */
+        .main-header {
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+            padding: 15px 0;
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid var(--color-secondary);
+            transition: top 0.3s ease-in-out; 
+        }
+
+        .header-hidden {
+            top: calc( -1 * var(--header-height) );
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            /* 確保導航欄在一行，避免元素溢出 */
+            flex-wrap: nowrap; 
+        }
+
+        .logo {
+            /* 移除 h1 的樣式，讓圖片居中 */
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .logo a {
+            /* 確保連結區域撐開 */
+            display: block;
+            padding: 0;
+        }
+
+        .logo img {
+            height: 40px; /* 設置圖片高度 */
+            width: auto;
+            /* 增加科技感光暈 */
+            filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.7)); 
+            transition: filter 0.3s;
+        }
+        .logo img:hover {
+            filter: drop-shadow(0 0 8px var(--color-primary));
+        }
+
+        .nav-links {
+            list-style: none;
+            /* 確保導航連結在一行 */
+            display: flex; 
+            flex-shrink: 0; 
+        }
+
+        .nav-links li a {
+            padding: 10px 15px;
+            margin: 0 5px;
+            font-weight: bold;
+            color: var(--color-text-light);
+            border-bottom: 2px solid transparent;
+            /* 確保文字不會換行 */
+            white-space: nowrap; 
+        }
+
+        .nav-links li a:hover {
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+        
+        .cart-icon a {
+             font-size: 1.5em;
+             margin-left: 20px;
+        }
+
+        /* ==================================== */
+        /* 主視覺區 (Hero) 樣式 - 調整高度 */
+        /* ==================================== */
+        #hero {
+            height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: var(--color-dark-bg);
+            /* 模擬粒子/網格背景 */
+            background-image: radial-gradient(var(--color-secondary) 1px, transparent 1px), radial-gradient(var(--color-secondary) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+        }
+
+        #hero h2 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px var(--color-primary);
+            animation: pulse-glow 2s infinite alternate;
+        }
+        
+        @keyframes pulse-glow {
+            from { opacity: 1; }
+            to { opacity: 0.8; }
+        }
+
+        #hero p {
+            font-size: 1.5em;
+            color: var(--color-text-dim);
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            padding: 15px 30px;
+            background: var(--color-primary);
+            color: var(--color-dark-bg) !important;
+            font-weight: bold;
+            border: 2px solid var(--color-primary);
+            border-radius: 5px;
+            box-shadow: 0 0 10px var(--color-primary);
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background: var(--color-secondary);
+            color: white !important;
+            box-shadow: 0 0 20px var(--color-primary);
+        }
+        .cta-button:active {
+            transform: scale(0.95);
+            box-shadow: none;
+        }
+
+        /* ==================================== */
+        /* 修正：產品分類 (Category Grid) 樣式 */
+        /* ==================================== */
+        #categories {
+            background-color: #1A1A1A;
+            border-top: 1px dashed var(--color-secondary);
+            border-bottom: 1px dashed var(--color-secondary);
+        }
+        #categories h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--color-text-light);
+        }
+
+        .category-grid {
+            /* 修正 grid-template-columns，提供響應式彈性 */
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 20px;
+            text-align: center;
+        }
+
+        .category-item {
+            background-color: #151515;
+            padding: 30px 20px;
+            border-radius: 8px;
+            border: 1px solid #222;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .category-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.2);
+            border-color: var(--color-primary);
+        }
+
+        .category-item i {
+            font-size: 3em;
+            color: var(--color-primary);
+            margin-bottom: 15px;
+        }
+
+        .category-item h3 {
+            font-size: 1.4em;
+            color: var(--color-text-light);
+        }
+
+        /* ==================================== */
+        /* 社群動態區 (Social Feed) 樣式 */
+        /* ==================================== */
+        #social-feed {
+            background-color: #000000;
+            padding: 50px 0;
+            text-align: center;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+
+        #social-feed h2 {
+            margin-bottom: 30px;
+            color: var(--color-primary);
+        }
+
+        .facebook-embed-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background-color: #111;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            max-width: 550px; 
+            margin: 0 auto;
+            border: 2px solid var(--color-secondary);
+            overflow: hidden;
+        }
+        
+        .fb-page {
+            max-width: 100%;
+            min-width: 300px;
+        }
+
+        /* ==================================== */
+        /* 商品展示區 (Product Grid) 樣式 */
+        /* ==================================== */
+        #products {
+            background-color: var(--color-dark-bg);
+        }
+        #products h2 {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .product-card {
+            background-color: #151515;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #222;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: box-shadow 0.3s;
+        }
+        .product-card:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        }
+
+        .product-image {
+            height: 200px;
+            /* 注意：這些是佔位符圖片路徑 */
+            background: #000 url('placeholder-image.jpg') center/cover; 
+            border-bottom: 1px solid var(--color-secondary);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-info h3 {
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #FF00FF;
+            margin: 10px 0;
+        }
+
+        .add-to-cart {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: var(--color-secondary);
+            color: white !important;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .add-to-cart:hover {
+            background-color: #0099cc;
+        }
+        
+        /* ==================================== */
+        /* 頁尾 (Footer) 樣式 */
+        /* ==================================== */
+        .main-footer {
+            background-color: #000;
+            padding: 40px 0 20px;
+            border-top: 5px solid var(--color-primary);
+            text-align: center;
+        }
+        .main-footer h4 {
+            color: var(--color-primary);
+            margin-bottom: 15px;
+        }
+        .main-footer p {
+            color: var(--color-text-dim);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="http://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v18.0"></script>
+
+    <header class="main-header" id="mainHeader">
+        <div class="container navbar">
+            <div class="logo">
+                <a href="#">
+                    <img src="Img/logo3.png" alt="未來科技 Logo">
+                </a>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#hero">首頁</a></li>
+                    <li><a href="#categories">產品分類</a></li>
+                    <li><a href="#social-feed">社群動態</a></li>
+                    <li><a href="#products">熱銷商品</a></li>
+                    <li><a href="#">解決方案</a></li>
+                    <li><a href="#">關於我們</a></li>
+                </ul>
+            </nav>
+            <div class="cart-icon">
+                <a href="#"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="container">
+            <h2>連接未來，守護現在。</h2>
+            <p>提供企業級智能安防、高速網路與通訊系統的頂尖整合服務。</p>
+            <a href="#products" class="cta-button">查看我們的產品組合</a>
+        </div>
+    </section>
+
+    <section id="categories">
+        <div class="container">
+            <h2>產品線概覽</h2>
+            <div class="category-grid">
+                <div class="category-item">
+                    <i class="fas fa-video"></i>
+                    <h3>智能監視器</h3>
+                    <p>AI 影像分析，全天候監控。</p>
+                </div>
+                <div class="category-item">
+                    <i class="fas fa-door-open"></i>
+                    <h3>門禁管理系統</h3>
+                    <p>生物辨識、安全無虞。</p>
+                </div>
+                <div class="category-item">
+                    <i class="fas fa-wifi"></i>
+                    <h3>網路設備/解決方案</h3>
+                    <p>高速、穩定、企業級網路架構。</p>
+                </div>
+                <div class="category-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <h3>通訊/電話系統</h3>
+                    <p>VoIP 與辦公室通訊整合。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="social-feed">
+        <div class="container">
+            <h2>社群動態 | 掌握最新技術資訊</h2>
+            <div class="facebook-embed-wrapper">
+                <div 
+                    class="fb-page" 
+                    data-href="https://www.facebook.com/profile.php?id=61578276867277" 
+                    data-tabs="timeline" 
+                    data-width="500" 
+                    data-height="400" 
+                    data-small-header="true" 
+                    data-adapt-container-width="true" 
+                    data-hide-cover="false" 
+                    data-show-facepile="true">
+                    <blockquote cite="https://www.facebook.com/profile.php?id=61578276867277" class="fb-xfbml-parse-ignore">
+                        <a href="https://www.facebook.com/profile.php?id=61578276867277">未來科技</a>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="products">
+        <div class="container">
+            <h2>熱銷與新品推薦</h2>
+            <div class="product-grid">
+                
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/camera.jpg');"></div>
+                    <div class="product-info">
+                        <h3>極光 Pro 4K 網路攝影機</h3>
+                        <p>超低光照夜視，IP67 防水防塵。</p>
+                        <div class="product-price">NT$ 8,990</div>
+                        <a href="#" class="add-to-cart">加入購物車 <i class="fas fa-cart-plus"></i></a>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/access.jpg');"></div>
+                    <div class="product-info">
+                        <h3>智能指紋辨識鎖</h3>
+                        <p>多重解鎖模式，高強度合金外殼。</p>
+                        <div class="product-price">NT$ 12,500</div>
+                        <a href="#" class="add-to-cart">加入購物車 <i class="fas fa-cart-plus"></i></a>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('images/router.jpg');"></div>
+                    <div class="product-info">
+                        <h3>企業級 Wi-Fi 6 路由器</h3>
+                        <p>Mesh 擴展技術，覆蓋無死角。</p>
+                        <div class="product-price">NT$ 5,200</div>
+                        <a href="#" class="add-to-cart">加入購物車 <i class="fas fa-cart-plus"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container">
+            <h4>未來科技 | Tech Future</h4>
+            <p>版權所有 &copy; 2025. All Rights Reserved. | 專業網站建置 by [您的名字/團隊]</p>
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.getElementById('mainHeader');
+            let lastScrollTop = 0;
+            const scrollThreshold = 100;
+
+            if (!header) return; 
+
+            window.addEventListener('scroll', function() {
+                let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (currentScrollTop > scrollThreshold) {
+                    // 向下捲動 (Scroll Down)
+                    if (currentScrollTop > lastScrollTop) {
+                        header.classList.add('header-hidden');
+                    } 
+                    // 向上捲動 (Scroll Up)
+                    else {
+                        header.classList.remove('header-hidden');
+                    }
+                } 
+                // 捲動到頂部時，確保 Header 顯示
+                else if (currentScrollTop <= scrollThreshold) {
+                    header.classList.remove('header-hidden');
+                }
+
+                lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+            }, false);
+        });
+    </script>
+
+</body>
+</html>
