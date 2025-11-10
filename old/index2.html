@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>未來科技 | 智能安防與網路解決方案</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-dark-bg: #0A0A0A; /* 深黑背景 */
+            --color-primary: #00FFFF; /* 亮青色/電光藍 (強調色) */
+            --color-secondary: #0077B6; /* 深藍色 (輔助色) */
+            --color-text-light: #F0F0F0; /* 淺色文字 */
+            --color-text-dim: #AAAAAA; /* 昏暗文字 */
+            --header-height: 80px; /* 定義 Header 預設高度 */
+            --mega-menu-bg: #1A1A1A; /* 巨型菜單背景 */
+            --mega-menu-height: 100px; /* 巨型菜單預設高度 */
+            --grid-gap-size: 30px; /* 統一網格間距 */
+            --color-danger: #FF6B6B; /* 新增：用於模態框關閉按鈕 */
+        }
+
+        /* 基礎樣式重置與字體 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--color-dark-bg);
+            color: var(--color-text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-top: var(--header-height); 
+        }
+        
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.3s, opacity 0.3s, transform 0.1s;
+        }
+        a:hover {
+            color: white;
+            opacity: 0.8;
+        }
+        a:active {
+            transform: scale(0.98);
+            opacity: 0.6;
+        }
+
+        /* 容器與佈局 */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: block; 
+        }
+        
+        section {
+            padding: 50px 0;
+            position: relative;
+        }
+        
+        /* ==================================== */
+        /* 導航列 (Header) 樣式 */
+        /* ==================================== */
+        .main-header {
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+            padding: 15px 0;
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid var(--color-secondary);
+            transition: top 0.3s ease-in-out; 
+        }
+        .header-hidden {
+            top: calc( -1 * var(--header-height) );
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            flex-wrap: nowrap; 
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+        .logo a { display: block; padding: 0; }
+        .logo img {
+            height: 40px;
+            width: auto;
+            filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.7)); 
+            transition: filter 0.3s;
+        }
+        .logo img:hover {
+            filter: drop-shadow(0 0 8px var(--color-primary));
+        }
+        .nav-links {
+            list-style: none;
+            display: flex; 
+            flex-shrink: 0; 
+        }
+        .nav-links li {
+            position: relative;
+        }
+        .nav-links li a {
+            padding: 10px 15px;
+            margin: 0 5px;
+            font-weight: bold;
+            color: var(--color-text-light);
+            border-bottom: 2px solid transparent;
+            white-space: nowrap; 
+        }
+        .nav-links li a:hover, .nav-links li a.active {
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+        
+        /* 🚀 修正與調整：登入/購物車圖標區塊樣式 */
+        .extra-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* 圖標間距 */
+        }
+        
+        /* 登入圖標樣式 (火柴人) */
+        .user-icon {
+            /* 修正: 確保這個容器不會干擾排版 */
+            height: 100%; 
+            display: flex;
+            align-items: center;
+        }
+        .user-icon a {
+            font-size: 1em; 
+            padding: 10px 15px;
+            font-weight: bold;
+            color: var(--color-text-light);
+            border: 2px solid transparent;
+            border-radius: 5px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            display: flex; /* 讓圖標和文字並排 */
+            align-items: center;
+            line-height: 1; /* 修正行高 */
+        }
+        .user-icon a:hover {
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+            opacity: 1;
+        }
+        .user-icon a i {
+            margin-right: 5px;
+            font-size: 1.2em; /* 調整圖標大小，使其與文字協調 */
+            vertical-align: middle;
+        }
+        
+        .cart-icon a {
+            font-size: 1.5em;
+            color: var(--color-text-light); 
+            padding: 0 5px; 
+            transition: color 0.3s;
+        }
+        .cart-icon a:hover {
+            color: var(--color-primary); 
+        }
+        
+        /* ==================================== */
+        /* Modal 樣式 (統一用於登入/註冊) */
+        /* ==================================== */
+        .register-modal {
+            display: none;
+            position: fixed;
+            z-index: 1010; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.85); 
+            padding-top: 50px;
+        }
+        .register-modal-content {
+            background-color: #1A1A1A;
+            /* 修正: 使用 top/transform 實現更好的置中效果 */
+            position: absolute; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            padding: 30px;
+            border: 1px solid var(--color-primary);
+            width: 80%;
+            max-width: 450px; 
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.5);
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        .register-modal-content h2 {
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        .register-modal-content label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--color-text-light);
+        }
+        .register-modal-content input[type="email"], 
+        .register-modal-content input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background-color: #0A0A0A;
+            color: var(--color-text-light);
+            margin-bottom: 15px;
+        }
+        .register-modal-content button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--color-primary);
+            color: var(--color-dark-bg) !important;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .register-modal-content button[type="submit"]:hover {
+            background-color: #00E6E6;
+        }
+        .register-modal .close-btn {
+            color: var(--color-text-dim);
+            position: absolute; /* 相對於 modal-content 定位 */
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        .register-modal .close-btn:hover, .register-modal .close-btn:focus {
+            color: var(--color-danger);
+
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* ... (其他樣式保持不變) ... */
+
+        @media (max-width: 960px) {
+            /* 調整平板時，導航列文字可能過於擁擠 */
+            .user-icon a {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="http://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v18.0"></script>
+
+    <header class="main-header" id="mainHeader">
+        <div class="container navbar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="Img/logo3.png" alt="未來科技 Logo">
+                </a>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active">首頁</a></li>
+                    <li><a href="shop.html" class="mega-menu-trigger">產品分類</a></li>
+                    <li><a href="shop.html">所有商品</a></li>
+                    <li><a href="#social-feed">社群動態</a></li>
+                    <li><a href="about1.html">關於我們</a></li>
+                    <li><a href="https://forms.gle/baS8kWJrUJt3HPpm7" target="_blank">填寫表單</a></li>
+                </ul>
+            </nav>
+            <div class="extra-icons">
+                 <div class="user-icon">
+                    <a href="#" id="loginTrigger" title="登入/註冊">
+                        <i class="fas fa-user"></i> 登入
+                    </a>
+                </div>
+                <div class="cart-icon">
+                    <a href="#"><i class="fas fa-shopping-cart"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="mega-menu" id="megaMenu">
+            <div class="container mega-menu-content">
+                <div class="mega-menu-column">
+                    <h4>智能安防系統</h4>
+                    <ul>
+                        <li><a href="shop.html?category=wired_cam">有線網路攝影機</a></li>
+                        <li><a href="shop.html?category=wireless_cam">無線網路攝影機</a></li>
+                        <li><a href="shop.html?category=video_rec">網路影像錄影機(NVR)</a></li>
+                        <li><a href="shop.html?category=alarm_sys">入侵警報系統</a></li>
+                    </ul>
+                </div>
+                <div class="mega-menu-column">
+                    <h4>網路基礎建設</h4>
+                    <ul>
+                        <li><a href="shop.html?category=poe_sw">PoE 網路交換器</a></li>
+                        <li><a href="shop.html?category=router">高效能路由器</a></li>
+                        <li><a href="shop.html?category=cable">網路線材與配件</a></li>
+                        <li><a href="shop.html?category=fiber">光纖網路解決方案</a></li>
+                    </ul>
+                </div>
+                <div class="mega-menu-column">
+                    <h4>智慧門禁系統</h4>
+                    <ul>
+                        <li><a href="shop.html?category=face_rec">人臉辨識門禁</a></li>
+                        <li><a href="shop.html?category=card_read">感應卡讀卡機</a></li>
+                        <li><a href="shop.html?category=intercom">智能影像對講機</a></li>
+                        <li><a href="shop.html?category=lock_acc">電鎖及配件</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="hero">...</section>
+    <section id="featured-products">...</section>
+    <section id="categories">...</section>
+    <section id="social-feed">...</section>
+
+    <footer class="main-footer">
+        <div class="container">
+            <h4>未來科技 | Tech Future</h4>
+            <p>版權所有 &copy; 2025. All Rights Reserved. | 專業網站建置 by [您的名字/團隊]</p>
+        </div>
+    </footer>
+
+
+    <div id="loginRegisterModal" class="register-modal">
+        <div class="register-modal-content">
+            <span class="close-btn" onclick="closeLoginModal()">&times;</span>
+            <h2><i class="fas fa-user-plus"></i> 新使用者註冊 (登入入口)</h2>
+            <p style="color:var(--color-text-dim); margin-bottom: 20px; font-size: 0.9em;">
+                請輸入您的帳號密碼以完成註冊，資料將自動存入後台管理系統。
+            </p>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regEmail">帳號 (Email)</label>
+                    <input type="email" id="regEmail" name="email" required placeholder="請輸入有效的 Email">
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">密碼</label>
+                    <input type="password" id="regPassword" name="password" required minlength="6" placeholder="密碼長度至少 6 位">
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">確認密碼</label>
+                    <input type="password" id="regConfirmPassword" name="confirmPassword" required minlength="6" placeholder="請再次輸入密碼">
+                </div>
+                <button type="submit">立即註冊</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const PRODUCTS_DATA = [
+            // ... (您的 PRODUCTS_DATA 保持不變) ...
+            { id: "CAM001", title: "4K AI 智能網路攝影機", category: "Camera", categoryText: "高清監控", price: 8990, description: "搭載先進 AI 分析，支援人臉及車牌辨識，適用於大型場所。", image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231f1f1f'/><circle cx='50' cy='50' r='40' fill='%2300ffff20' stroke='%2300ffff' stroke-width='2'/><circle cx='50' cy='50' r='10' fill='%2300ffff'/><text x='50' y='95' font-size='10' fill='%23aaa' text-anchor='middle'>Camera 001</text></svg>", stock: 50, isFeatured: true },
+            { id: "ACC002", title: "指紋+卡片雙重驗證門禁機", category: "Access", categoryText: "門禁系統", price: 4500, description: "高安全性設計，適用於辦公室及機房。支援指紋和感應卡。", image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231f1f1f'/><rect x='30' y='20' width='40' height='60' rx='5' fill='%230077B6'/><rect x='40' y='65' width='20' height='5' fill='%2300ffff'/><circle cx='50' cy='45' r='10' fill='%2300ffff'/><text x='50' y='95' font-size='10' fill='%23aaa' text-anchor='middle'>Access 002</text></svg>", stock: 35, isFeatured: true },
+            { id: "NET003", title: "企業級 Wi-Fi 6 路由器", category: "Network", categoryText: "網路設備", price: 5200, description: "提供高速穩定無線網路，支援上百個連線裝置，具備流量管理功能。", image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231f1f1f'/><rect x='20' y='40' width='60' height='20' rx='2' fill='%2300ffff'/><path d='M30 40V20M70 40V20' stroke='%2300ffff' stroke-width='3'/><text x='50' y='95' font-size='10' fill='%23aaa' text-anchor='middle'>Network 003</text></svg>", stock: 20, isFeatured: true },
+            { id: "CAM004", title: "超廣角魚眼監控器", category: "Camera", categoryText: "高清監控", price: 6500, description: "單機即可覆蓋 360 度無死角監控範圍，軟體支援多種分割視圖。", image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231f1f1f'/><circle cx='50' cy='50' r='35' fill='%2300ffff20' stroke='%2300ffff' stroke-width='2'/><circle cx='50' cy='50' r='5' fill='%2300ffff'/><text x='50' y='95' font-size='10' fill='%23aaa' text-anchor='middle'>Camera 004</text></svg>", stock: 3, isFeatured: false },
+            { id: "NET005", title: "Cat.6A 無氧銅網路線", category: "Network", categoryText: "網路佈線", price: 850, description: "高品質 Cat.6A 網路線，支援 10Gbps 傳輸速度，低延遲高穩定。", image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231f1f1f'/><rect x='10' y='40' width='80' height='20' rx='10' fill='%230077B6'/><path d='M20 50 L80 50' stroke='%2300ffff' stroke-width='2'/><text x='50' y='95' font-size='10' fill='%23aaa' text-anchor='middle'>Network 005</text></svg>", stock: 100, isFeatured: true },
+            { id: "ACC006", title: "IP 門口機 (帶視訊)", category: "Access", categoryText: "門禁系統", price: 1800, description: "戶外型 IP 視訊門口機，可與手機 App 聯動，隨時掌握訪客情況。", image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231f1f1f'/><rect x='35' y='15' width='30' height='70' rx='3' fill='%2300ffff20' stroke='%230077B6' stroke-width='2'/><circle cx='50' cy='30' r='5' fill='%2300ffff'/><rect x='40' y='50' width='20' height='25' fill='%230077B6'/><text x='50' y='95' font-size='10' fill='%23aaa' text-anchor='middle'>Access 006</text></svg>", stock: 40, isFeatured: false },
+        ];
+        
+        function renderFeaturedProducts() {
+            // ... (商品渲染邏輯保持不變) ...
+            const grid = document.getElementById('featuredProductGrid');
+            const featuredProducts = PRODUCTS_DATA.filter(p => p.isFeatured).slice(0, 3);
+
+            if (!grid) return;
+            grid.innerHTML = ''; 
+
+            featuredProducts.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <a href="shop1.html?id=${product.id}">
+                        <div class="product-image" style="background-image: url('${product.image || 'images/placeholder.jpg'}');"></div>
+                        <div class="product-info">
+                            <h3>${product.title}</h3>
+                            <p>${product.categoryText}</p>
+                            <div class="product-price">NT$ ${product.price.toLocaleString()}</div>
+                            <span class="add-to-cart">查看詳情 <i class="fas fa-eye"></i></span>
+                        </div>
+                    </a>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFeaturedProducts();
+
+            const header = document.getElementById('mainHeader');
+            const megaMenuTrigger = document.querySelector('.mega-menu-trigger');
+            const megaMenu = document.getElementById('megaMenu');
+            let lastScrollTop = 0;
+            const scrollThreshold = 100;
+
+            if (!header) return; 
+
+            // ... (Header 隱藏/顯示及 Mega Menu 邏輯保持不變) ...
+            window.addEventListener('scroll', function() {
+                let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (currentScrollTop > scrollThreshold) {
+                    if (currentScrollTop > lastScrollTop) {
+                        header.classList.add('header-hidden');
+                        if (megaMenu) megaMenu.classList.remove('is-visible'); 
+                    } 
+                    else {
+                        header.classList.remove('header-hidden');
+                    }
+                } 
+                else if (currentScrollTop <= scrollThreshold) {
+                    header.classList.remove('header-hidden');
+                }
+
+                lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+            }, false);
+
+            if (megaMenuTrigger && megaMenu) {
+                let hideTimeout;
+
+                function showMegaMenu() {
+                    clearTimeout(hideTimeout);
+                    megaMenu.classList.add('is-visible');
+                    header.classList.remove('header-hidden'); 
+                }
+
+                function hideMegaMenu() {
+                    hideTimeout = setTimeout(() => {
+                        megaMenu.classList.remove('is-visible');
+                    }, 150);
+                }
+
+                megaMenuTrigger.addEventListener('mouseenter', showMegaMenu);
+                megaMenuTrigger.addEventListener('mouseleave', hideMegaMenu);
+                megaMenu.addEventListener('mouseenter', showMegaMenu);
+                megaMenu.addEventListener('mouseleave', hideMegaMenu);
+            }
+            
+            
+            // ====================================
+            // 🚀 修正：使用者登入/註冊功能邏輯 (由火柴人/登入文字觸發)
+            // ====================================
+            const loginTrigger = document.getElementById('loginTrigger');
+            const loginRegisterModal = document.getElementById('loginRegisterModal');
+            const registerForm = document.getElementById('registerForm');
+            
+            function openLoginModal(e) {
+                e.preventDefault();
+                loginRegisterModal.style.display = 'block';
+            }
+
+            // 確保 closeLoginModal 在全域範圍內可用
+            window.closeLoginModal = function() {
+                loginRegisterModal.style.display = 'none';
+                registerForm.reset();
+            }
+
+            if (loginTrigger) {
+                loginTrigger.addEventListener('click', openLoginModal);
+            }
+
+            // 點擊 modal 外部時關閉
+            window.onclick = function(event) {
+                if (event.target == loginRegisterModal) {
+                    window.closeLoginModal();
+                }
+            }
+            
+            // 處理註冊表單提交 (邏輯保持不變，確保存入後台)
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('regEmail').value;
+                const password = document.getElementById('regPassword').value;
+                const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+                if (password !== confirmPassword) {
+                    alert('密碼與確認密碼不一致，請重新輸入！');
+                    return;
+                }
+                
+                // 1. 取得現有的使用者資料 (使用與 admin.html 相同的 key)
+                const storedUsers = localStorage.getItem('registeredUsers');
+                let users = storedUsers ? JSON.parse(storedUsers) : [];
+
+                // 2. 檢查帳號是否已存在
+                if (users.some(user => user.email === email)) {
+                    alert('此 Email 帳號已存在，請直接登入或使用其他 Email 註冊。');
+                    return;
+                }
+
+                // 3. 建立新的使用者 ID
+                const newId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+                
+                const newUser = {
+                    id: newId,
+                    email: email,
+                    password: password 
+                };
+
+                // 4. 新增使用者並儲存回 localStorage
+                users.push(newUser);
+                localStorage.setItem('registeredUsers', JSON.stringify(users));
+                
+                alert('註冊成功！您的帳號已儲存至後台管理系統。');
+                window.closeLoginModal(); // 關閉 Modal
+            });
+        });
+    </script>
+
+</body>
+</html>
