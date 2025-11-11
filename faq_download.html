@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常見疑問 & 下載中心 | 未來科技</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* ... (所有 CSS 樣式 - 無變動) ... */
+        :root {
+            --color-dark-bg: #0A0A0A; /* 深黑背景 */
+            --color-primary: #00FFFF; /* 亮青色/電光藍 (強調色) */
+            --color-secondary: #0077B6; /* 深藍色 (輔助色) */
+            --color-text-light: #F0F0F0; /* 淺色文字 */
+            --color-text-dim: #AAAAAA; /* 昏暗文字 */
+            --header-height: 80px; /* 定義 Header 預設高度 */
+            --mega-menu-bg: #1A1A1A; /* 巨型菜單背景 */
+            --mega-menu-height: 100px; /* 巨型菜單預設高度 */
+            --grid-gap-size: 30px; /* 統一網格間距 */
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--color-dark-bg); color: var(--color-text-light); line-height: 1.6; overflow-x: hidden; padding-top: var(--header-height); }
+        a { color: var(--color-primary); text-decoration: none; transition: color 0.3s, opacity 0.3s, transform 0.1s; }
+        a:hover { color: white; opacity: 0.8; }
+        a:active { transform: scale(0.98); opacity: 0.6; }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; display: block; }
+        section { padding: 50px 0; position: relative; }
+        h2 { font-size: 2.5em; color: var(--color-primary); margin-bottom: 30px; text-align: center; border-bottom: 2px solid var(--color-secondary); padding-bottom: 10px; }
+        h3 { font-size: 1.8em; color: var(--color-text-light); margin-top: 25px; margin-bottom: 20px; border-bottom: 1px dashed #333; padding-bottom: 5px; }
+
+        /* ... 導航列 ... */
+        .main-header { background-color: rgba(0, 0, 0, 0.9); backdrop-filter: blur(5px); padding: 15px 0; height: var(--header-height); position: fixed; top: 0; width: 100%; z-index: 1000; border-bottom: 1px solid var(--color-secondary); transition: top 0.3s ease-in-out; }
+        .header-hidden { top: calc( -1 * var(--header-height) ); }
+        .navbar { display: flex; justify-content: space-between; align-items: center; height: 100%; flex-wrap: nowrap; }
+        .logo { display: flex; align-items: center; height: 100%; }
+        .logo a { display: block; padding: 0; }
+        .logo img { height: 40px; width: auto; filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.7)); transition: filter 0.3s; }
+        .logo img:hover { filter: drop-shadow(0 0 8px var(--color-primary)); }
+        .nav-links { list-style: none; display: flex; flex-shrink: 0; }
+        .nav-links li { position: relative; }
+        .nav-links li a { padding: 10px 15px; margin: 0 5px; font-weight: bold; color: var(--color-text-light); border-bottom: 2px solid transparent; white-space: nowrap; }
+        .nav-links li a:hover, .nav-links li a.active { color: var(--color-primary); border-color: var(--color-primary); }
+        .cart-icon a { font-size: 1.5em; margin-left: 20px; color: var(--color-text-light); }
+        
+        /* ... Mega Menu ... */
+        .mega-menu { position: fixed; top: var(--header-height); left: 0; width: 100%; background-color: #0A0A0A; border-top: 2px solid var(--color-primary); box-shadow: 0 15px 30px rgba(0, 255, 255, 0.2); z-index: 990; opacity: 0; visibility: hidden; transform: translateY(-20px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; display: block; }
+        .mega-menu.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .mega-menu-content { display: flex; justify-content: flex-start; gap: 50px; padding: 30px 50px; max-width: 1200px; margin: 0 auto; }
+        .mega-menu-column { flex: 1; min-width: 200px; padding: 0 15px; border-right: 1px solid rgba(255, 255, 255, 0.05); }
+        .mega-menu-column:last-child { border-right: none; }
+        .mega-menu-column h4 { color: var(--color-primary); margin-bottom: 15px; font-size: 1.3em; border-bottom: 2px solid var(--color-secondary); padding-bottom: 8px; letter-spacing: 1px; }
+        .mega-menu-column h4 a { color: var(--color-primary); text-decoration: none; }
+        .mega-menu-column h4 a:hover { color: white; }
+        .mega-menu-column ul { list-style: none; padding: 0; }
+        .mega-menu-column ul li a { display: block; padding: 10px 0; color: var(--color-text-dim); font-weight: normal; transition: color 0.2s, transform 0.2s; }
+        .mega-menu-column ul li a:hover { color: var(--color-primary); transform: translateX(8px); background-color: rgba(0, 255, 255, 0.05); padding-left: 5px; }
+        
+        /* ... 登入 Modal ... */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(3px); padding-top: 60px; }
+        .modal-content { background-color: #1A1A1A; margin: 10% auto; padding: 30px; border: 2px solid var(--color-primary); width: 90%; max-width: 400px; border-radius: 10px; box-shadow: 0 5px 25px rgba(0, 255, 255, 0.5); position: relative; animation: fadeInModal 0.3s ease-out; }
+        @keyframes fadeInModal { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-content h2 { text-align: center; color: var(--color-primary); margin-bottom: 25px; font-size: 1.8em; }
+        .close-button { color: var(--color-text-dim); float: right; font-size: 28px; font-weight: bold; position: absolute; top: 10px; right: 20px; cursor: pointer; transition: color 0.2s; }
+        .close-button:hover, .close-button:focus { color: white; text-decoration: none; cursor: pointer; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; color: var(--color-text-light); font-weight: bold; }
+        .input-group input[type="text"], .input-group input[type="email"], .input-group input[type="password"] { width: 100%; padding: 12px; border: 1px solid var(--color-secondary); border-radius: 5px; background-color: #0A0A0A; color: var(--color-text-light); transition: border-color 0.3s; }
+        .input-group input:focus { border-color: var(--color-primary); outline: none; box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
+        .modal-login-btn { width: 100%; padding: 15px; background-color: var(--color-primary); color: var(--color-dark-bg); border: none; border-radius: 5px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s, transform 0.1s; margin-top: 10px; }
+        .modal-login-btn:hover { background-color: #00E6E6; box-shadow: 0 0 10px var(--color-primary); }
+        .modal-login-btn:active { transform: scale(0.99); }
+        .modal-links { display: flex; justify-content: space-between; margin-top: 20px; font-size: 0.9em; }
+        .modal-links a { color: var(--color-text-dim); }
+        .modal-links a:hover { color: var(--color-primary); }
+        .modal-note { text-align: center; font-size: 0.8em; color: #FF6B6B; margin-top: 20px; padding-top: 10px; border-top: 1px dashed #333; }
+        
+        /* ... 登入下拉選單 ... */
+        .user-dropdown-menu { display: none; position: absolute; top: 100%; right: 0; background-color: var(--mega-menu-bg); border: 1px solid var(--color-secondary); border-top: 2px solid var(--color-primary); min-width: 160px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); z-index: 1100; list-style: none; padding: 5px 0; border-radius: 0 0 5px 5px; }
+        .nav-links li:hover .user-dropdown-menu { display: block; }
+        .user-dropdown-menu li a { padding: 10px 20px; margin: 0; color: var(--color-text-dim); font-weight: normal; border-bottom: none; white-space: nowrap; display: block; }
+        .user-dropdown-menu li a:hover { background-color: rgba(0, 255, 255, 0.1); color: var(--color-primary); border-color: transparent; }
+        .nav-user-trigger { cursor: default; }
+        .nav-links li a .fa-caret-down { font-size: 0.8em; margin-left: 5px; transition: transform 0.2s; }
+        .nav-links li:hover > a .fa-caret-down { transform: rotate(180deg); }
+        
+        /* ... 頁尾 ... */
+        .main-footer { background-color: #000; padding: 40px 0 20px; border-top: 5px solid var(--color-primary); text-align: center; }
+        .main-footer h4 { color: var(--color-primary); margin-bottom: 15px; }
+        .main-footer p { color: var(--color-text-dim); font-size: 0.9em; }
+
+        /* ... 響應式 ... */
+        @media (max-width: 1080px) {
+            .mega-menu { width: 250px; left: auto; right: 0; top: 100%; transform: none; padding: 5px 0; }
+            .mega-menu-content { flex-direction: column; gap: 0; width: 100%; max-width: none; margin: 0; padding: 10px; }
+            .mega-menu-column { border-right: none; padding: 0; }
+            .mega-menu-column ul li a:hover { padding-left: 0; transform: none; }
+            #nav-login-item .user-dropdown-menu { left: auto; right: 0; }
+        }
+        @media (max-width: 768px) { }
+    </style>
+
+    <style>
+        /* ... (Tab Switcher 樣式 - 無變動) ... */
+        .tabs-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid var(--color-secondary); }
+        .tab-button { padding: 12px 25px; font-size: 1.2em; font-weight: bold; color: var(--color-text-light); background-color: var(--color-secondary); border: none; border-radius: 5px; cursor: pointer; transition: all 0.3s ease; }
+        .tab-button i { margin-right: 8px; }
+        .tab-button:hover { background-color: #0099cc; }
+        .tab-button.active { background-color: var(--color-primary); color: var(--color-dark-bg); box-shadow: 0 0 10px var(--color-primary); }
+        .tab-panel { display: none; animation: fadeInPanel 0.5s ease; }
+        .tab-panel.active { display: block; }
+        @keyframes fadeInPanel { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* ... (頁面特定樣式 - 無變動) ... */
+        .page-content { background-color: #1A1A1A; padding: 40px; border-radius: 8px; }
+        .tab-panel .page-content { margin-top: 0; margin-bottom: 0; }
+        .faq-container { max-width: 900px; margin: 0 auto; }
+        .faq-item { border-bottom: 1px solid #333; }
+        .faq-question { width: 100%; background: none; border: none; color: var(--color-text-light); font-size: 1.3em; font-weight: bold; text-align: left; padding: 20px 10px; cursor: pointer; transition: background-color 0.2s; position: relative; }
+        .faq-question:hover { background-color: #222; }
+        .faq-question::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; right: 15px; top: 50%; transform: translateY(-50%) rotate(0deg); transition: transform 0.3s ease; color: var(--color-primary); }
+        .faq-question.active::after { transform: translateY(-50%) rotate(-180deg); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s ease; background-color: #111; }
+        .faq-answer > * { padding: 25px; color: var(--color-text-dim); font-size: 1.1em; line-height: 1.8; }
+        .faq-answer p strong { color: var(--color-text-light); }
+        .faq-answer ul { margin-left: 20px; }
+
+        
+        /* ... (下載中心樣式 - 無變動) ... */
+        .download-section { margin-top: 40px; }
+        .download-section:first-of-type { margin-top: 0; }
+        .download-list { list-style: none; padding: 0; }
+        .download-item { display: flex; align-items: center; background-color: #111; border: 1px solid #333; border-radius: 5px; padding: 20px; margin-bottom: 15px; gap: 20px; }
+        .download-item-icon { font-size: 2.5em; color: var(--color-primary); width: 50px; text-align: center; flex-shrink: 0; }
+        .download-item-info { flex-grow: 1; }
+        .download-item-info h4 { font-size: 1.2em; color: var(--color-text-light); margin: 0 0 5px 0; }
+        .download-item-info p { font-size: 0.9em; color: var(--color-text-dim); margin: 0; }
+        .download-item-action .btn-download { padding: 8px 15px; background-color: var(--color-secondary); color: white !important; font-weight: bold; border-radius: 4px; transition: background-color 0.2s; }
+        .download-item-action .btn-download:hover { background-color: #0099cc; }
+        .download-item-action .btn-disabled { padding: 8px 15px; background-color: #444; color: #888; font-weight: bold; border-radius: 4px; cursor: not-allowed; }
+        .empty-list-note { color: var(--color-text-dim); text-align: center; padding: 20px; font-style: italic; }
+
+
+        /* ... (下載中心的內部 Tab 樣式 - 無變動) ... */
+        #download-tabs-container {
+            margin-top: 0; 
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+        }
+        .download-tab-panel {
+            display: none; 
+            animation: fadeInPanel 0.5s ease; 
+        }
+        .download-tab-panel.active {
+            display: block; 
+        }
+
+        /* ... (RWD - 無變動) ... */
+        @media (max-width: 600px) {
+            .tabs-container { flex-direction: column; gap: 10px; }
+            .tab-button { font-size: 1.1em; }
+            .download-item { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .download-item-action { width: 100%; }
+            .download-item-action .btn-download, .download-item-action .btn-disabled { display: block; text-align: center; }
+            .page-content { padding: 20px; }
+            h2 { font-size: 2em; }
+            h3 { font-size: 1.5em; }
+            .faq-question { font-size: 1.1em; }
+            .faq-answer > * { font-size: 1em; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header" id="mainHeader">
+        <div class="container navbar">
+            <div class="logo">
+                <a href="index.html"> <img src="Img/logo3.png" alt="未來科技 Logo">
+                </a>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">首頁</a></li>
+                    <li><a href="shop.html" class="mega-menu-trigger" data-target="productMenu">產品分類  <i class="fas fa-caret-down"></i></a></li>
+                    <li><a href="shop.html?view=all" class="mega-menu-trigger" data-target="allProductsMenu">所有商品  <i class="fas fa-caret-down"></i></a></li>
+                    <li><a href="index.html#social-feed" class="mega-menu-trigger" data-target="socialMenu">社群動態  <i class="fas fa-caret-down"></i></a></li>
+                    <li><a href="about1.html" class="mega-menu-trigger" data-target="aboutMenu">關於我們  <i class="fas fa-caret-down"></i></a></li>
+                    
+                    <li><a href="faq_download.html#download-content" class="mega-menu-trigger active" data-target="downloadMenu">下載中心  <i class="fas fa-caret-down"></i></a></li>
+                    <li id="nav-login-item">
+                        <a href="#" id="openLoginModal"><i class="fas fa-user"></i> 登入</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="cart-icon">
+                <a href="#"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="mega-menu" id="productMenu">
+        <div class="container mega-menu-content">
+            <div class="mega-menu-column">
+				<h4><a href="shop.html?category=wired_cam">監視系統</a></h4>
+				<h4><a href="shop.html?category=wired_cam">存儲硬體</a></h4>
+				<h4><a href="shop.html?category=wired_cam">網路線材</a></h4>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="shop.html?category=wired_cam">路由器/WIFI</a></h4>
+				<h4><a href="shop.html?category=wired_cam">網路交換器(POE)</a></h4>
+				<h4><a href="shop.html?category=wired_cam">個人電腦</a></h4>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="shop.html?category=wired_cam">門禁系統</a></h4>
+				<h4><a href="shop.html?category=wired_cam">對講系統</a></h4>
+				<h4><a href="shop.html?category=wired_cam">廣播PA系統</a></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="mega-menu" id="allProductsMenu">
+        <div class="container mega-menu-content">
+            <div class="mega-menu-column">
+                <ul>
+					<ul><h4><a href="shop.html?category=fire">監視系統</a></h4></ul>
+					<li><a href="shop.html?category=wired_cam">有線監視器BNC/IPC</a></li>
+                    <li><a href="shop.html?category=wireless_cam">無線監視器</a></li>
+                    <li><a href="shop.html?category=nvr">錄影主機DVR/NVR</a></li>
+					<li><a href="shop.html?category=router">監控專用硬碟</a></li>
+                </ul>
+            </div>
+            <div class="mega-menu-column">
+                <ul>
+					<ul><h4><a href="shop.html?category=storage">網路系統</a></h4></ul>
+					<li><a href="shop.html?category=storage">路由器</a></li>
+                    <li><a href="shop.html?category=switch">WIFI</a></li>
+                    <li><a href="shop.html?category=cable">電話線材</a></li>
+                    <li><a href="shop.html?category=voip">網路線材</a></li>
+                </ul>
+            </div>
+            <div class="mega-menu-column">
+				<ul>
+					<ul><h4><a href="shop.html?category=access">其他系統</a></h4></ul>
+                <li><a href="shop.html?category=access">門禁讀卡機</a></li>
+				<li><a href="shop.html?category=intercom">對講機</a></li>
+				<li><a href="shop.html?category=pa">廣播主機</a></li>
+				<li><a href="shop.html?category=fire">廣播喇叭</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="mega-menu" id="socialMenu">
+        <div class="container mega-menu-content">
+            <div class="mega-menu-column">
+                <h4><a href="https://www.facebook.com/profile.php?id=61578276867277" target="_blank"><i class="fab fa-facebook"></i>　Facebook</a></h4>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="#" target="_blank"><i class="fab fa-youtube"></i>　Youtube</a></h4>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="#" target="_blank"><i class="fab fa-line"></i>　Line</a></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="mega-menu" id="aboutMenu">
+        <div class="container mega-menu-content">
+            <div class="mega-menu-column">
+                <h4><a href="about1.html#about-us">關於新事科技</a></h4>
+                <ul>
+                    <h4><a href="https://forms.gle/baS8kWJrUJt3HPpm7" target="_blank">預約現場勘查</a></h4>
+                </ul>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="about1.html#history">歷史實績</a></h4>
+                <ul>
+                    <h4><a href="faq_download.html">常見疑問</a></h4>
+                </ul>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="about1.html#service">查看服務流程</a></h4>
+				<h4><a href="about1.html#contact">聯絡我們</a></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="mega-menu" id="downloadMenu">
+        <div class="container mega-menu-content">
+            <div class="mega-menu-column">
+                <h4><a href="#">程式下載</a></h4>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="#">文件下載</a></h4>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="#">圖檔下載</a></h4>
+            </div>
+        </div>
+    </div>
+    <main>
+        <section id="faq-download-content">
+            <div class="container">
+                
+                <div class="tabs-container" id="main-tabs-container">
+                    <button class="tab-button active" data-target="faq-content">
+                        <i class="fas fa-question-circle"></i> 常見疑問
+                    </button>
+                    <button class="tab-button" data-target="download-content">
+                        <i class="fas fa-download"></i> 下載區
+                    </button>
+                </div>
+                
+                <div id="faq-content" class="tab-panel active">
+                    <div class="page-content">
+                        <div class="faq-container" id="faqContainer">
+                            </div>
+                        
+                    </div>
+                </div>
+
+                <div id="download-content" class="tab-panel">
+                    <div class="page-content">
+                        <div class="tabs-container" id="download-tabs-container">
+                            <button class="tab-button active" data-target="program-downloads">
+                                <i class="fas fa-laptop-code"></i> 程式下載
+                            </button>
+                            <button class="tab-button" data-target="document-downloads">
+                                <i class="fas fa-file-pdf"></i> 文件下載
+                            </button>
+                            <button class="tab-button" data-target="image-downloads">
+                                <i class="fas fa-image"></i> 圖檔下載
+                            </button>
+                        </div>
+                        
+                        
+                        <div class="download-section download-tab-panel active" id="program-downloads">
+                            <ul class="download-list" id="program-list">
+                                </ul>
+                        </div>
+                        <div class="download-section download-tab-panel" id="document-downloads">
+                            <ul class="download-list" id="document-list">
+                                </ul>
+                        </div>
+                        <div class="download-section download-tab-panel" id="image-downloads">
+                            <ul class="download-list" id="image-list">
+                                </ul>
+                        </div>
+                    </div>
+                </div>
+                </div>
+        </section>
+    </main>
+    
+
+    <footer class="main-footer">
+        <div class="container">
+            <h4>新事科技 | XINSHIKEJI</h4>
+            <p>版權所有 &copy; 2025. All Rights Reserved. | Professional website building by XINSHIKEJI Ltd.</p>
+        </div>
+    </footer>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+
+            <form id="loginForm">
+                <h2><i class="fas fa-user"></i> 會員登入</h2>
+                <div class="input-group">
+                    <label for="username">帳號 (Email/帳號)</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">密碼</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="modal-login-btn">登入</button>
+                <div class="modal-links">
+                    <a href="#" id="forgotPasswordLink">忘記密碼?</a>
+                    <a href="#" id="switchToRegister">註冊新帳號</a>
+                </div>
+            </form>
+
+            <form id="registerForm" style="display:none;">
+                <h2><i class="fas fa-user-plus"></i> 新會員註冊</h2>
+                <div class="input-group">
+                    <label for="reg_name">姓名</label>
+                    <input type="text" id="reg_name" name="reg_name" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg_email">Email 帳號</label>
+                    <input type="email" id="reg_email" name="reg_email" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg_password">設定密碼</label>
+                    <input type="password" id="reg_password" name="reg_password" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg_password_confirm">確認密碼</label>
+                    <input type="password" id="reg_password_confirm" name="reg_password_confirm" required>
+                </div>
+                <button type="submit" class="modal-login-btn">註冊</button>
+                <div class="modal-links" style="justify-content: center;">
+                    <a href="#" id="switchToLogin">返回登入</a>
+                </div>
+            </form>
+
+            <p class="modal-note">
+                請填寫帳號及密碼登入，若無帳號可點擊註冊，並妥善保存帳號密碼。
+            </p>
+        </div>
+    </div>
+
+
+    <script>
+        // ... (統一的登入/註冊/Header 邏輯 - 無變動) ...
+        let loginModal, openLoginModalBtn, closeButton, loginForm, registerForm, switchToRegisterBtn, switchToLoginBtn, forgotPasswordLink;
+        function openLoginModalHandler(e) { e.preventDefault(); if(loginModal) { loginModal.style.display = 'block'; switchForm('login'); } }
+        function switchForm(formId) { if (formId === 'login') { if(loginForm) loginForm.style.display = 'block'; if(registerForm) registerForm.style.display = 'none'; if(registerForm) registerForm.reset(); } else if (formId === 'register') { if(loginForm) loginForm.style.display = 'none'; if(registerForm) registerForm.style.display = 'block'; if(loginForm) loginForm.reset(); } }
+        function handleUserLogout(e) { e.preventDefault(); if (confirm("確定要登出嗎？")) { try { sessionStorage.removeItem('isLoggedIn'); sessionStorage.removeItem('currentUserName'); sessionStorage.removeItem('currentUserEmail'); } catch(e) { console.error("登出失敗:", e); } updateLoginStatus(); } }
+        function updateLoginStatus() { try { const loginLi = document.getElementById('nav-login-item'); if (!loginLi) return; const isLoggedIn = sessionStorage.getItem('isLoggedIn'); const userName = sessionStorage.getItem('currentUserName'); if (isLoggedIn === 'user' && userName) { loginLi.innerHTML = `<a href="#" class="nav-user-trigger" id="userMenuTrigger"><i class="fas fa-user-check"></i> ${userName} <i class="fas fa-caret-down"></i></a><ul class="user-dropdown-menu"><li><a href="user.html#profile">個人資料</a></li><li><a href="user.html#orders">訂單資料</a></li><li><a href="#" id="userLogoutBtn">帳號登出</a></li></ul>`; const logoutBtn = document.getElementById('userLogoutBtn'); if (logoutBtn) { logoutBtn.addEventListener('click', handleUserLogout); } } else if (isLoggedIn === 'admin' && userName) { loginLi.innerHTML = `<a href="#" class="nav-user-trigger" id="adminMenuTrigger" style="color: var(--color-primary);"><i class="fas fa-shield-halved"></i> ${userName} <i class="fas fa-caret-down"></i></a><ul class="user-dropdown-menu"><li><a href="admin.html">後台管理</a></li><li><a href="#" id="adminLogoutBtn">帳號登出</a></li></ul>`; const logoutBtn = document.getElementById('adminLogoutBtn'); if (logoutBtn) { logoutBtn.addEventListener('click', handleUserLogout); } } else { loginLi.innerHTML = `<a href="#" id="openLoginModal"><i class="fas fa-user"></i> 登入</a>`; const loginBtn = document.getElementById('openLoginModal'); if (loginBtn) { loginBtn.addEventListener('click', openLoginModalHandler); } } } catch(e) { console.error("更新登入狀態失敗:", e); } }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- 1. 統一的登入/註冊視窗 (Modal) 邏輯 (同 index.html) ---
+            loginModal = document.getElementById('loginModal');
+            // ... (省略登入/註冊表單提交邏輯) ...
+            closeButton = document.querySelector('.close-button');
+            loginForm = document.getElementById('loginForm');
+            registerForm = document.getElementById('registerForm');
+            switchToRegisterBtn = document.getElementById('switchToRegister');
+            switchToLoginBtn = document.getElementById('switchToLogin');
+            forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            updateLoginStatus();
+            if (loginModal && closeButton) {
+                if(switchToRegisterBtn) switchToRegisterBtn.addEventListener('click', function(e) { e.preventDefault(); switchForm('register'); });
+                if(switchToLoginBtn) switchToLoginBtn.addEventListener('click', function(e) { e.preventDefault(); switchForm('login'); });
+                if(closeButton) closeButton.addEventListener('click', function() { loginModal.style.display = 'none'; });
+                window.addEventListener('click', function(e) { if (e.target == loginModal) { loginModal.style.display = 'none'; } });
+                if(loginForm) loginForm.addEventListener('submit', function(e) { e.preventDefault(); /* ... (登入邏輯) ... */ });
+                if(registerForm) registerForm.addEventListener('submit', function(e) { e.preventDefault(); /* ... (註冊邏輯) ... */ });
+                if(forgotPasswordLink) forgotPasswordLink.addEventListener('click', function(e) { e.preventDefault(); alert("點擊忘記密碼: 這是模擬功能，您將被導向密碼重設流程。"); });
+            }
+            
+            // --- 2. 統一的 Header 捲動/選單邏輯 (同 index.html) ---
+            const header = document.getElementById('mainHeader'); let lastScrollTop = 0; const scrollThreshold = 100; if (header) { const allMegaMenusForScroll = document.querySelectorAll('.mega-menu'); function hideAllMegaMenus() { allMegaMenusForScroll.forEach(menu => { menu.classList.remove('is-visible'); }); } window.addEventListener('scroll', function() { let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop; if (currentScrollTop > scrollThreshold) { if (currentScrollTop > lastScrollTop) { header.classList.add('header-hidden'); hideAllMegaMenus(); } else { header.classList.remove('header-hidden'); } } else if (currentScrollTop <= scrollThreshold) { header.classList.remove('header-hidden'); } lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop; }, false); const megaMenuTriggers = document.querySelectorAll('.mega-menu-trigger'); const allMegaMenus = document.querySelectorAll('.mega-menu'); let hideTimeout; megaMenuTriggers.forEach(trigger => { const targetId = trigger.dataset.target; const menu = document.getElementById(targetId); if (!menu) return; trigger.addEventListener('mouseenter', function() { clearTimeout(hideTimeout); allMegaMenus.forEach(m => { if (m !== menu) { m.classList.remove('is-visible'); } }); menu.classList.add('is-visible'); header.classList.remove('header-hidden'); }); trigger.addEventListener('mouseleave', function() { hideTimeout = setTimeout(() => { menu.classList.remove('is-visible'); }, 150); }); }); allMegaMenus.forEach(menu => { menu.addEventListener('mouseenter', function() { clearTimeout(hideTimeout); }); menu.addEventListener('mouseleave', function() { hideTimeout = setTimeout(() => { menu.classList.remove('is-visible'); }, 150); }); }); }
+
+
+            // --- 3. 主要 Tab Switcher 邏輯 (限定選擇器) (無變動) ---
+            const mainTabButtons = document.querySelectorAll('#main-tabs-container .tab-button');
+            const mainTabPanels = document.querySelectorAll('.tab-panel:not(.download-tab-panel)'); 
+            
+            if (mainTabButtons.length > 0 && mainTabPanels.length > 0) {
+                mainTabButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const targetId = this.dataset.target;
+                        mainTabButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                        mainTabPanels.forEach(panel => { panel.classList.remove('active'); });
+                        const targetPanel = document.getElementById(targetId);
+                        if(targetPanel) { targetPanel.classList.add('active'); }
+                    });
+                });
+            }
+
+            // --- 3B. NEW: URL Hash Check ---
+            // (此功能用於偵測 URL hash 並自動切換 Tab)
+            function checkHashForTab() {
+                const hash = window.location.hash;
+                let targetButton;
+                
+                if (hash === '#download-content') {
+                    // 尋找 "下載區" 的按鈕
+                    targetButton = document.querySelector('#main-tabs-container .tab-button[data-target="download-content"]');
+                } else if (hash === '#faq-content' || hash === '') {
+                    // 尋找 "常見疑問" 的按鈕 (預設)
+                    targetButton = document.querySelector('#main-tabs-container .tab-button[data-target="faq-content"]');
+                }
+
+                // 如果找到了目標按鈕，且它目前不是 active 狀態，就模擬點擊它
+                if (targetButton && !targetButton.classList.contains('active')) {
+                    targetButton.click();
+                }
+            }
+            
+            // 1. 頁面載入時檢查一次
+            checkHashForTab();
+            
+            // 2. 當 hash 變更時 (例如使用者點擊了導航列的連結) 再檢查一次
+            window.addEventListener('hashchange', checkHashForTab);
+            // --- 4. 下載中心內部的 Tab Switcher 邏輯 (無變動) ---
+            const downloadTabButtons = document.querySelectorAll('#download-tabs-container .tab-button');
+            const downloadTabPanels = document.querySelectorAll('.download-tab-panel');
+            
+            if (downloadTabButtons.length > 0 && downloadTabPanels.length > 0) {
+                downloadTabButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const targetId = this.dataset.target; 
+                        downloadTabButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                        downloadTabPanels.forEach(panel => {
+                            panel.classList.remove('active');
+                            if (panel.id === targetId) {
+                                panel.classList.add('active');
+                            }
+                        });
+                    });
+                });
+            }
+
+
+            // --- 5. 頁面專屬 JS (FAQ + Download Loader) (無變動) ---
+            
+            // (A) FAQ Accordion (手風琴效果) 
+            const faqContainer = document.getElementById('faqContainer');
+            if(faqContainer) {
+                faqContainer.addEventListener('click', function(e) {
+                    const questionBtn = e.target.closest('.faq-question');
+                    if (!questionBtn) return;
+                    const answer = questionBtn.nextElementSibling;
+                    faqContainer.querySelectorAll('.faq-question').forEach(btn => {
+                        if (btn !== questionBtn && btn.classList.contains('active')) {
+                            btn.classList.remove('active');
+                            btn.nextElementSibling.style.maxHeight = null;
+                            btn.nextElementSibling.style.padding = null;
+                        }
+                    });
+                    questionBtn.classList.toggle('active');
+                    if (questionBtn.classList.contains('active')) {
+                        answer.style.maxHeight = answer.scrollHeight + 50 + 'px';
+                    } else {
+                        answer.style.maxHeight = null;
+                    }
+                });
+            }
+
+            // (B) FAQ Loader (從 localStorage 載入資料) 
+            function loadFaqs() {
+                const container = document.getElementById('faqContainer');
+                if (!container) return;
+                let allFaqs = [];
+                try {
+                    const storedData = localStorage.getItem('adminFaqs');
+                    allFaqs = storedData ? JSON.parse(storedData) : [];
+                } catch (e) { console.error("無法讀取 FAQ 資料:", e); }
+
+                if (allFaqs.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: var(--color-text-dim);">目前尚無常見疑問。</p>';
+                    return;
+                }
+                container.innerHTML = '';
+                allFaqs.forEach(faq => {
+                    const faqItem = document.createElement('div');
+                    faqItem.className = 'faq-item';
+                    faqItem.innerHTML = `
+                        <button class="faq-question">${faq.question}</button>
+                        <div class="faq-answer">
+                            ${faq.answer}
+                        </div>
+                    `;
+                    container.appendChild(faqItem);
+                });
+            }
+
+            // (C) Download Center Loader (從 localStorage 載入資料) 
+            function loadDownloadItems() {
+                const programList = document.getElementById('program-list');
+                const documentList = document.getElementById('document-list');
+                const imageList = document.getElementById('image-list');
+                if (!programList || !documentList || !imageList) return;
+                
+                let allDownloads = [];
+                try {
+                    const storedData = localStorage.getItem('adminDownloads');
+                    allDownloads = storedData ? JSON.parse(storedData) : [];
+                } catch (e) { console.error("無法讀取下載資料:", e); }
+
+                const visibleDownloads = allDownloads.filter(item => item.isVisible);
+                const programs = visibleDownloads.filter(item => item.category === 'program');
+                const documents = visibleDownloads.filter(item => item.category === 'document');
+                const images = visibleDownloads.filter(item => item.category === 'image');
+
+                const renderList = (listEl, items, emptyMsg) => {
+                    listEl.innerHTML = '';
+                    if (items.length === 0) {
+                        listEl.innerHTML = `<li class="empty-list-note">${emptyMsg}</li>`;
+                        return;
+                    }
+                    items.forEach(item => {
+                        const icon = item.icon || 'fas fa-file';
+                        const description = item.description || '點擊下載';
+                        const actionButton = item.isDownloadable 
+                            ? `<a href="${item.url || '#'}" class="btn-download" target="_blank" download><i class="fas fa-download"></i> 下載</a>`
+                            : `<span class="btn-disabled"><i class="fas fa-eye"></i> 僅供檢視</span>`;
+                        const li = document.createElement('li');
+                        li.className = 'download-item';
+                        li.innerHTML = `
+                            <div class="download-item-icon"><i class="${icon}"></i></div>
+                            <div class="download-item-info">
+                                <h4>${item.title}</h4>
+                                <p>${description}</p>
+                            </div>
+                            <div class="download-item-action">${actionButton}</div>
+                        `;
+                        listEl.appendChild(li);
+                    });
+                };
+
+                renderList(programList, programs, "目前尚無程式可下載");
+                renderList(documentList, documents, "目前尚無文件可下載");
+                renderList(imageList, images, "目前尚無圖檔可下載");
+            }
+
+            // --- 6. 啟動載入 ---
+            loadFaqs(); // 載入 FAQ
+            loadDownloadItems(); // 載入 Downloads
+            
+        });
+    </script>
+
+</body>
+</html>

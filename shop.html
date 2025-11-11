@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>產品列表 | 未來科技</title> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-dark-bg: #0A0A0A;
+            --color-primary: #00FFFF;
+            --color-secondary: #0077B6;
+            --color-text-light: #F0F0F0;
+            --color-text-dim: #AAAAAA;
+            --header-height: 80px;
+            --mega-menu-bg: #1A1A1A; 
+            /* 💡 新增：同步 index.html 的變數 */
+            --mega-menu-height: 100px;
+            --grid-gap-size: 30px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--color-dark-bg);
+            color: var(--color-text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-top: var(--header-height); 
+        }
+        
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.3s, opacity 0.3s, transform 0.1s;
+        }
+        a:hover {
+            color: white;
+            opacity: 0.8;
+        }
+        a:active {
+            transform: scale(0.98);
+            opacity: 0.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        section {
+            padding: 50px 0;
+            position: relative;
+        }
+
+        /* 💡 ------------------------------------------- */
+        /* 💡 修正：同步 index.html 的 Header 樣式 */
+        /* 💡 (此區塊樣式與 index.html 完全一致) */
+        /* 💡 ------------------------------------------- */
+        .main-header {
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+            padding: 15px 0;
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid var(--color-secondary);
+            transition: top 0.3s ease-in-out; 
+        }
+
+        .header-hidden {
+            top: calc( -1 * var(--header-height) );
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            flex-wrap: nowrap; 
+        }
+
+        .logo { display: flex; align-items: center; height: 100%; }
+        .logo a { display: block; padding: 0; }
+        .logo img { height: 40px; width: auto; filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.7)); transition: filter 0.3s; }
+        .logo img:hover { filter: drop-shadow(0 0 8px var(--color-primary)); }
+
+        .nav-links { list-style: none; display: flex; flex-shrink: 0; }
+        .nav-links li { position: relative; } 
+        .nav-links li a {
+            padding: 10px 15px; margin: 0 5px; font-weight: bold;
+            color: var(--color-text-light); border-bottom: 2px solid transparent; white-space: nowrap; 
+        }
+        .nav-links li a:hover, .nav-links li a.active {
+            color: var(--color-primary); border-color: var(--color-primary);
+        }
+        .cart-icon a { font-size: 1.5em; margin-left: 20px; color: var(--color-text-light); } 
+
+        /* 💡 ------------------------------------------- */
+        /* 💡 修正：替換為 index.html 的 Mega Menu 樣式 */
+        /* 💡 ------------------------------------------- */
+        .mega-menu {
+            position: fixed; /* 修正為 fixed */
+            top: var(--header-height);
+            left: 0;
+            width: 100%;
+            background-color: #0A0A0A;
+            border-top: 2px solid var(--color-primary);
+            box-shadow: 0 15px 30px rgba(0, 255, 255, 0.2);
+            z-index: 990;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+            display: block; /* 修正為 block (JS 會控制 visibility) */
+        }
+        
+        .mega-menu.is-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .mega-menu-content {
+            display: flex;
+            justify-content: flex-start; /* 修正為 flex-start (靠左) */
+            gap: 50px; /* 修正：新增 gap */
+            padding: 30px 50px;
+            /* 修正：新增 max-width 和 margin (使其置中) */
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .mega-menu-column {
+            flex: 1;
+            min-width: 200px;
+            padding: 0 15px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05); 
+        }
+        .mega-menu-column:last-child { border-right: none; }
+
+        .mega-menu-column h4 {
+            color: var(--color-primary);
+            margin-bottom: 15px;
+            font-size: 1.3em; 
+            border-bottom: 2px solid var(--color-secondary); 
+            padding-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* 💡 新增：H4 標題連結樣式 */
+        .mega-menu-column h4 a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+        .mega-menu-column h4 a:hover {
+            color: white;
+        }
+
+        .mega-menu-column ul { list-style: none; padding: 0; }
+        .mega-menu-column ul li a {
+            display: block;
+            padding: 10px 0; 
+            color: var(--color-text-dim);
+            font-weight: normal;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .mega-menu-column ul li a:hover {
+            color: var(--color-primary);
+            transform: translateX(8px); 
+            background-color: rgba(0, 255, 255, 0.05); 
+            padding-left: 5px;
+        }
+
+        /* ==================================== */
+        /* 產品列表頁 (PLP) 樣式 (shop.html 專屬 - 保持不變) */
+        /* ==================================== */
+        #product-list-page {
+            padding: 30px 0 80px; 
+            background-color: #050505;
+            min-height: calc(100vh - var(--header-height) - 150px); 
+        }
+
+        .plp-header { margin-bottom: 30px; border-bottom: 2px solid var(--color-secondary); padding-bottom: 10px; }
+        .plp-header h1 { font-size: 2.5em; color: var(--color-primary); }
+
+        .plp-layout { display: flex; gap: 30px; align-items: flex-start; }
+
+        /* 左側篩選欄 (保持不變) */
+        .sidebar {
+            flex-basis: 250px; flex-shrink: 0; background-color: #151515;
+            padding: 20px; border-radius: 8px; border: 1px solid #222;
+            position: sticky; top: calc(var(--header-height) + 20px); 
+        }
+        .sidebar h3 { color: var(--color-primary); margin-bottom: 15px; padding-bottom: 5px; border-bottom: 1px dashed #333; }
+        .filter-group { margin-bottom: 20px; }
+        .filter-group label { display: block; margin-bottom: 8px; color: var(--color-text-light); font-weight: bold; }
+        .filter-group input[type="range"], .filter-group select { width: 100%; padding: 8px; background-color: #000; color: var(--color-text-light); border: 1px solid var(--color-secondary); border-radius: 3px; appearance: none; }
+        
+        .filter-group div label { 
+            display: inline-flex; 
+            align-items: center; 
+            margin-bottom: 5px; 
+            font-weight: normal; 
+            margin-right: 15px; 
+        }
+        .filter-group input[type="checkbox"] { margin-right: 8px; filter: hue-rotate(180deg) brightness(1.5); }
+        
+        .price-range-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .price-range-label label {
+            margin-bottom: 0; 
+            font-weight: bold;
+        }
+        #price-range-value {
+            font-weight: bold;
+            color: var(--color-primary);
+            background-color: #000;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+
+        /* 右側商品網格 (保持不變) */
+        .main-content { flex-grow: 1; }
+        .sort-bar { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 20px; padding: 10px; background-color: #111111; border-radius: 5px; }
+        .sort-bar label, .sort-bar select { margin-left: 15px; color: var(--color-text-dim); }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .product-card { background-color: #151515; border-radius: 8px; overflow: hidden; border: 1px solid #222; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); transition: box-shadow 0.3s; }
+        .product-card:hover { box-shadow: 0 0 20px rgba(0, 255, 255, 0.4); }
+        .product-image { height: 200px; background-color: #000; background-size: cover; background-position: center; border-bottom: 1px solid var(--color-secondary); }
+        
+        .product-info { padding: 20px; }
+        .product-info h3 { color: var(--color-primary); margin-bottom: 10px; height: 2.6em; overflow: hidden; }
+        .product-info .product-price { font-size: 1.5em; font-weight: bold; color: #FF00FF; margin: 10px 0; }
+        
+        .product-info .product-action-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .product-info .quantity-input {
+            width: 60px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--color-secondary);
+            background: #000;
+            color: white;
+            text-align: center;
+        }
+        .product-info .add-to-cart-btn {
+            flex-grow: 1;
+            display: inline-block;
+            padding: 8px 10px;
+            background-color: var(--color-secondary);
+            color: white !important;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .product-info .add-to-cart-btn:hover {
+            background-color: #0099cc;
+        }
+        .product-info .view-details-link {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--color-text-dim);
+        }
+        .product-info .view-details-link:hover {
+            color: var(--color-primary);
+        }
+
+        .cta-button { padding: 15px 30px; background: var(--color-primary); color: var(--color-dark-bg) !important; font-weight: bold; border: 2px solid var(--color-primary); border-radius: 5px; box-shadow: 0 0 10px var(--color-primary); transition: all 0.3s; }
+        .cta-button:hover { background: var(--color-secondary); color: white !important; box-shadow: 0 0 20px var(--color-primary); }
+        
+        .load-more-container { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px dashed #333; }
+        .main-footer { background-color: #000; padding: 40px 0 20px; border-top: 5px solid var(--color-primary); text-align: center; }
+        /* 💡 修正：增加 .main-footer 內部的樣式 (來自 index.html) */
+        .main-footer h4 { color: var(--color-primary); margin-bottom: 15px; }
+        .main-footer p { color: var(--color-text-dim); font-size: 0.9em; }
+        
+        .product-quick-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; padding: 15px 0; border-top: 1px solid #333; border-bottom: 1px solid #333; background-color: #111111; }
+        .quick-nav-button { padding: 8px 15px; background-color: #222; color: var(--color-text-light); border: 1px solid var(--color-secondary); border-radius: 4px; font-size: 0.95em; font-weight: 500; cursor: pointer; transition: background-color 0.3s, border-color 0.3s, color 0.3s; flex-shrink: 0; }
+        .quick-nav-button:hover { background-color: var(--color-secondary); color: var(--color-dark-bg); }
+        .quick-nav-button.active { background-color: var(--color-primary); color: var(--color-dark-bg) !important; border-color: var(--color-primary); box-shadow: 0 0 8px rgba(0, 255, 255, 0.5); }
+        
+        
+        /* 檢視模式樣式 (保持不變) */
+        .all-products-view .sidebar,
+        .all-products-view .product-quick-nav {
+            display: none; 
+        }
+        
+        .all-products-view .product-grid {
+            grid-template-columns: repeat(4, 1fr); 
+        }
+
+        @media (max-width: 960px) {
+            .all-products-view .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .all-products-view .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* ------------------------------------------- */
+        
+        /* 💡 ------------------------------------------- */
+        /* 💡 修正：同步 index.html 的 Modal 樣式 */
+        /* 💡 (此區塊樣式與 index.html 完全一致) */
+        /* 💡 ------------------------------------------- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8); 
+            backdrop-filter: blur(3px); 
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #1A1A1A;
+            margin: 10% auto; 
+            padding: 30px;
+            border: 2px solid var(--color-primary);
+            width: 90%; 
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.5);
+            position: relative;
+            animation: fadeInModal 0.3s ease-out;
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-content h2 { text-align: center; color: var(--color-primary); margin-bottom: 25px; font-size: 1.8em; }
+        .close-button { color: var(--color-text-dim); float: right; font-size: 28px; font-weight: bold; position: absolute; top: 10px; right: 20px; cursor: pointer; transition: color 0.2s; }
+        .close-button:hover, .close-button:focus { color: white; text-decoration: none; cursor: pointer; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; color: var(--color-text-light); font-weight: bold; }
+        .input-group input[type="text"], 
+        .input-group input[type="email"], 
+        .input-group input[type="password"] {
+            width: 100%; padding: 12px; border: 1px solid var(--color-secondary); border-radius: 5px;
+            background-color: #0A0A0A; color: var(--color-text-light); transition: border-color 0.3s;
+        }
+        .input-group input:focus { border-color: var(--color-primary); outline: none; box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
+        .modal-login-btn {
+            width: 100%; padding: 15px; background-color: var(--color-primary); color: var(--color-dark-bg);
+            border: none; border-radius: 5px; font-size: 1.1em; font-weight: bold; cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s, transform 0.1s; margin-top: 10px;
+        }
+        .modal-login-btn:hover { background-color: #00E6E6; box-shadow: 0 0 10px var(--color-primary); }
+        .modal-login-btn:active { transform: scale(0.99); }
+        .modal-links { display: flex; justify-content: space-between; margin-top: 20px; font-size: 0.9em; }
+        .modal-links a { color: var(--color-text-dim); }
+        .modal-links a:hover { color: var(--color-primary); }
+        .modal-note { text-align: center; font-size: 0.8em; color: #FF6B6B; margin-top: 20px; padding-top: 10px; border-top: 1px dashed #333; }
+
+        /* ------------------------------------------- */
+        
+        /* 💡 ------------------------------------------- */
+        /* 💡 修正：同步 index.html 的 User Dropdown 樣式 */
+        /* 💡 (此區塊樣式與 index.html 完全一致) */
+        /* 💡 ------------------------------------------- */
+        .user-dropdown-menu {
+            display: none; position: absolute; top: 100%; right: 0;
+            background-color: var(--mega-menu-bg); border: 1px solid var(--color-secondary);
+            border-top: 2px solid var(--color-primary); min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); z-index: 1100;
+            list-style: none; padding: 5px 0; border-radius: 0 0 5px 5px;
+        }
+        .nav-links li:hover .user-dropdown-menu { display: block; }
+        .user-dropdown-menu li a {
+            padding: 10px 20px; margin: 0; color: var(--color-text-dim);
+            font-weight: normal; border-bottom: none; display: block;
+        }
+        .user-dropdown-menu li a:hover {
+            background-color: rgba(0, 255, 255, 0.1);
+            color: var(--color-primary); border-color: transparent;
+        }
+        .nav-user-trigger { cursor: default; }
+
+        /* 💡 新增：下拉箭頭樣式 */
+        .nav-links li a .fa-caret-down {
+            font-size: 0.8em;
+            margin-left: 5px;
+            transition: transform 0.2s;
+        }
+        .nav-links li:hover > a .fa-caret-down {
+             transform: rotate(180deg);
+        }
+
+        /* 💡 修正：同步 index.html 的 RWD 樣式 */
+        @media (max-width: 1080px) {
+            .mega-menu {
+                width: 250px; left: auto; right: 0; top: 100%;
+                transform: none; padding: 5px 0;
+            }
+            .mega-menu-content {
+                flex-direction: column; gap: 0; width: 100%;
+                max-width: none; margin: 0; padding: 10px;
+            }
+            .mega-menu-column { border-right: none; padding: 0; }
+            .mega-menu-column ul li a:hover { padding-left: 0; transform: none; }
+            
+            /* 💡 新增：確保 RWD 下登入選單靠右 */
+            #nav-login-item .user-dropdown-menu {
+                left: auto;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header" id="mainHeader">
+        <div class="container navbar">
+            <div class="logo">
+                <a href="index.html"> <img src="Img/logo3.png" alt="未來科技 Logo">
+                </a>
+            </div>
+            
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">首頁</a></li>
+                    
+                    <li>
+                        <a href="shop.html" class="mega-menu-trigger" data-target="productMenu" id="nav-category-link">
+                            產品分類  <i class="fas fa-caret-down"></i>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="shop.html?view=all" class="mega-menu-trigger" data-target="allProductsMenu" id="nav-all-products-link">
+                            所有商品  <i class="fas fa-caret-down"></i>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="index.html#social-feed" class="mega-menu-trigger" data-target="socialMenu">
+                            社群動態  <i class="fas fa-caret-down"></i>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="about1.html" class="mega-menu-trigger" data-target="aboutMenu">
+                            關於我們  <i class="fas fa-caret-down"></i>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="faq_download.html#download-content" class="mega-menu-trigger" data-target="downloadMenu">
+                            下載中心  <i class="fas fa-caret-down"></i>
+                        </a>
+                    </li>
+                    
+                    <li id="nav-login-item">
+                        <a href="#" id="openLoginModal"><i class="fas fa-user"></i> 登入</a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="cart-icon">
+                <a href="#"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </div>
+    </header>
+    <div class="mega-menu" id="productMenu">
+        <div class="container mega-menu-content">
+            <div class="mega-menu-column">
+				<h4><a href="shop.html?category=wired_cam">監視系統</a></h4>
+				<h4><a href="shop.html?category=wired_cam">存儲硬體</a></h4>
+				<h4><a href="shop.html?category=wired_cam">網路線材</a></h4>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="shop.html?category=wired_cam">路由器/WIFI</a></h4>
+				<h4><a href="shop.html?category=wired_cam">網路交換器(POE)</a></h4>
+				<h4><a href="shop.html?category=wired_cam">個人電腦</a></h4>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="shop.html?category=wired_cam">門禁系統</a></h4>
+				<h4><a href="shop.html?category=wired_cam">對講系統</a></h4>
+				<h4><a href="shop.html?category=wired_cam">廣播PA系統</a></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="mega-menu" id="allProductsMenu">
+        <div class="container mega-menu-content">
+            <div class="mega-menu-column">
+                <ul>
+					<ul><h4><a href="shop.html?category=fire">監視系統</a></h4></ul>
+					<li><a href="shop.html?category=wired_cam">有線監視器BNC/IPC</a></li>
+                    <li><a href="shop.html?category=wireless_cam">無線監視器</a></li>
+                    <li><a href="shop.html?category=nvr">錄影主機DVR/NVR</a></li>
+					<li><a href="shop.html?category=router">監控專用硬碟</a></li>
+                </ul>
+            </div>
+            <div class="mega-menu-column">
+                <ul>
+					<ul><h4><a href="shop.html?category=storage">網路系統</a></h4></ul>
+					<li><a href="shop.html?category=storage">路由器</a></li>
+                    <li><a href="shop.html?category=switch">WIFI</a></li>
+                    <li><a href="shop.html?category=cable">電話線材</a></li>
+                    <li><a href="shop.html?category=voip">網路線材</a></li>
+                </ul>
+            </div>
+            <div class="mega-menu-column">
+				<ul>
+					<ul><h4><a href="shop.html?category=access">其他系統</a></h4></ul>
+                <li><a href="shop.html?category=access">門禁讀卡機</a></li>
+				<li><a href="shop.html?category=intercom">對講機</a></li>
+				<li><a href="shop.html?category=pa">廣播主機</a></li>
+				<li><a href="shop.html?category=fire">廣播喇叭</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="mega-menu" id="socialMenu">
+        <div class="container mega-menu-content">
+            <div class="mega-menu-column">
+                <h4><a href="https://www.facebook.com/profile.php?id=61578276867277" target="_blank"><i class="fab fa-facebook"></i>　Facebook</a></h4>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="#" target="_blank"><i class="fab fa-youtube"></i>　Youtube</a></h4>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="#" target="_blank"><i class="fab fa-line"></i>　Line</a></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="mega-menu" id="aboutMenu">
+        <div class="container mega-menu-content">
+            <div class="mega-menu-column">
+                <h4><a href="about1.html#about-us">關於新事科技</a></h4>
+                <ul>
+                    <h4><a href="https://forms.gle/baS8kWJrUJt3HPpm7" target="_blank">預約現場勘查</a></h4>
+                </ul>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="about1.html#history">歷史實績</a></h4>
+                <ul>
+                    <h4><a href="faq_download.html">常見疑問</a></h4>
+                </ul>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="about1.html#service">查看服務流程</a></h4>
+				<h4><a href="about1.html#contact">聯絡我們</a></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="mega-menu" id="downloadMenu">
+        <div class="container mega-menu-content">
+            <div class="mega-menu-column">
+                <h4><a href="#">程式下載</a></h4>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="#">文件下載</a></h4>
+            </div>
+            <div class="mega-menu-column">
+                <h4><a href="#">圖檔下載</a></h4>
+            </div>
+        </div>
+    </div>
+    <section id="product-list-page">
+        <div class="container">
+            <div class="plp-header">
+                <h1 id="page-title">產品分類</h1>
+            </div>
+            <div class="product-quick-nav">
+                <button class="quick-nav-button active">全部產品</button>
+                <button class="quick-nav-button">有線監視器</button>
+                <button class="quick-nav-button">無線監視器</button>
+                <button class="quick-nav-button">監視主機 (NVR)</button>
+                <button class="quick-nav-button">門禁系統</button>
+                <button class="quick-nav-button">網路線/電話線</button>
+                <button class="quick-nav-button">存儲硬碟</button>
+                <button class="quick-nav-button">其他配件</button> 
+            </div>
+            <div class="plp-layout">
+                
+                <aside class="sidebar">
+                    <h3>產品篩選器 <i class="fas fa-filter"></i></h3>
+                    
+                    <div class="filter-group">
+                        <label for="category">主要類別</label>
+                        <select id="category">
+                            <option value="all">所有類別</option>
+                            <option value="security">智能安防</option>
+                            <option value="network">網路設備</option>
+                            <option value="access">門禁系統</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="price-range-label">
+                            <label for="price-range">價格範圍 (最高):</label>
+                            <span id="price-range-value">NT$ 20,000</span>
+                        </div>
+                        <input type="range" id="price-range" min="500" max="20000" step="100" value="20000">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>產品細項類別</label>
+                        <div>
+                            <input type="checkbox" id="sub-cat-a"><label for="sub-cat-a"> 有線監視器</label><br>
+                            <input type="checkbox" id="sub-cat-b"><label for="sub-cat-b"> 無線監視器</label><br>
+                            <input type="checkbox" id="sub-cat-c"><label for="sub-cat-c"> 監視主機</label><br>
+                            <input type="checkbox" id="sub-cat-d"><label for="sub-cat-d"> 門禁系統</label><br>
+                            <input type="checkbox" id="sub-cat-e"><label for="sub-cat-e"> 網路線/電話線</label><br>
+                            <input type="checkbox" id="sub-cat-f"><label for="sub-cat-f"> 存儲硬碟</label><br>
+                            <input type="checkbox" id="sub-cat-g"><label for="sub-cat-g"> 其他配件</label>
+
+                        </div>
+                    </div>
+
+                    <button class="cta-button" style="width: 100%; padding: 10px; margin-top: 15px;">套用篩選</button>
+
+                </aside>
+
+                <main class="main-content">
+                    
+                    <div class="sort-bar">
+                        <label for="sort-by">排序方式：</label>
+                        <select id="sort-by">
+                            <option value="newest">最新上架</option>
+                            <option value="price-asc">價格由低到高</option>
+                            <option value="price-desc">價格由高到低</option>
+                        </select>
+                    </div>
+
+                    <div class="product-grid" id="product-grid-all">
+                        </div>
+                    
+                    <div class="load-more-container">
+                        <button class="cta-button" style="padding: 12px 25px; font-size: 1.1em;">
+                            載入更多商品 <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container">
+            <h4>新事科技 | XINSHIKEJI</h4>
+            <p>版權所有 &copy; 2025. All Rights Reserved. | Professional website building by XINSHIKEJI Ltd.</p>
+        </div>
+    </footer>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+
+            <form id="loginForm">
+                <h2><i class="fas fa-user"></i> 會員登入</h2>
+                <div class="input-group">
+                    <label for="username">帳號 (Email/帳號)</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">密碼</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="modal-login-btn">登入</button>
+                <div class="modal-links">
+                    <a href="#" id="forgotPasswordLink">忘記密碼?</a>
+                    <a href="#" id="switchToRegister">註冊新帳號</a>
+                </div>
+            </form>
+
+            <form id="registerForm" style="display:none;">
+                <h2><i class="fas fa-user-plus"></i> 新會員註冊</h2>
+                <div class="input-group">
+                    <label for="reg_name">姓名</label>
+                    <input type="text" id="reg_name" name="reg_name" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg_email">Email 帳號</label>
+                    <input type="email" id="reg_email" name="reg_email" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg_password">設定密碼</label>
+                    <input type="password" id="reg_password" name="reg_password" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg_password_confirm">確認密碼</label>
+                    <input type="password" id="reg_password_confirm" name="reg_password_confirm" required>
+                </div>
+                <button type="submit" class="modal-login-btn">註冊</button>
+                <div class="modal-links" style="justify-content: center;">
+                    <a href="#" id="switchToLogin">返回登入</a>
+                </div>
+            </form>
+
+            <p class="modal-note">
+                請填寫帳號及密碼登入，若無帳號可點擊註冊，並妥善保存帳號密碼。
+            </p>
+        </div>
+    </div>
+
+
+    <script>
+        // ====================================
+        // 💡 統一的登入/註冊/登出邏輯 (與 index.html 同步)
+        // ====================================
+        let loginModal, openLoginModalBtn, closeButton, loginForm, registerForm, switchToRegisterBtn, switchToLoginBtn, forgotPasswordLink;
+        function openLoginModalHandler(e) { e.preventDefault(); if(loginModal) { loginModal.style.display = 'block'; switchForm('login'); } }
+        function switchForm(formId) {
+            if (formId === 'login') {
+                if(loginForm) loginForm.style.display = 'block';
+                if(registerForm) registerForm.style.display = 'none';
+                if(registerForm) registerForm.reset(); 
+            } else if (formId === 'register') {
+                if(loginForm) loginForm.style.display = 'none';
+                if(registerForm) registerForm.style.display = 'block';
+                if(loginForm) loginForm.reset(); 
+            }
+        }
+        function handleUserLogout(e) {
+            e.preventDefault();
+            if (confirm("確定要登出嗎？")) {
+                try {
+                    sessionStorage.removeItem('isLoggedIn');
+                    sessionStorage.removeItem('currentUserName');
+                    sessionStorage.removeItem('currentUserEmail'); 
+                } catch(e) { console.error("登出失敗:", e); }
+                updateLoginStatus(); 
+            }
+        }
+        function updateLoginStatus() {
+            try {
+                const loginLi = document.getElementById('nav-login-item'); 
+                if (!loginLi) return;
+                const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+                const userName = sessionStorage.getItem('currentUserName');
+
+                if (isLoggedIn === 'user' && userName) {
+                    loginLi.innerHTML = `
+                        <a href="#" class="nav-user-trigger" id="userMenuTrigger">
+                            <i class="fas fa-user-check"></i> ${userName} <i class="fas fa-caret-down"></i>
+                        </a>
+                        <ul class="user-dropdown-menu">
+                            <li><a href="user.html#profile">個人資料</a></li>
+                            <li><a href="user.html#orders">訂單資料</a></li>
+                            <li><a href="#" id="userLogoutBtn">帳號登出</a></li>
+                        </ul>
+                    `;
+                    const logoutBtn = document.getElementById('userLogoutBtn');
+                    if (logoutBtn) { logoutBtn.addEventListener('click', handleUserLogout); }
+                } 
+                else if (isLoggedIn === 'admin' && userName) {
+                    loginLi.innerHTML = `
+                        <a href="#" class="nav-user-trigger" id="adminMenuTrigger" style="color: var(--color-primary);">
+                            <i class="fas fa-shield-halved"></i> ${userName} <i class="fas fa-caret-down"></i>
+                        </a>
+                        <ul class="user-dropdown-menu">
+                            <li><a href="admin.html">後台管理</a></li>
+                            <li><a href="#" id="adminLogoutBtn">帳號登出</a></li>
+                        </ul>
+                    `;
+                    const logoutBtn = document.getElementById('adminLogoutBtn');
+                    if (logoutBtn) { logoutBtn.addEventListener('click', handleUserLogout); }
+                }
+                else {
+                    loginLi.innerHTML = `<a href="#" id="openLoginModal"><i class="fas fa-user"></i> 登入</a>`;
+                    const loginBtn = document.getElementById('openLoginModal');
+                    if (loginBtn) { loginBtn.addEventListener('click', openLoginModalHandler); }
+                }
+            } catch(e) {
+                console.error("更新登入狀態失敗:", e);
+            }
+        }
+        // 💡 結束同步 登入/註冊/登出 邏輯
+        // ====================================
+
+
+        // ====================================
+        // 💡 頁面特定功能 (shop.html - 保持不變)
+        // ====================================
+        function applyFilters() {
+            const category = document.getElementById('category').value;
+            const maxPrice = parseInt(document.getElementById('price-range').value, 10);
+            
+            // 💡 subCategoryMap 已移至 DOMContentLoaded 頂層
+            
+            const selectedSubCategories = [];
+            document.querySelectorAll('.filter-group input[type="checkbox"]:checked').forEach(cb => {
+                if (subCategoryMap[cb.id]) {
+                    selectedSubCategories.push(subCategoryMap[cb.id]);
+                }
+            });
+
+            const filters = {
+                category: category,
+                maxPrice: maxPrice,
+                subCategories: selectedSubCategories
+            };
+            
+            loadAllProducts(filters);
+        }
+
+        function loadAllProducts(filters = null) {
+            const grid = document.getElementById('product-grid-all');
+            if (!grid) return;
+
+            let products = [];
+            try {
+                const storedData = localStorage.getItem('adminProducts');
+                if (storedData) {
+                    products = JSON.parse(storedData);
+                }
+            } catch (e) {
+                console.error("無法從 localStorage 讀取產品資料:", e);
+                grid.innerHTML = "<p style='color: var(--color-danger);'>載入產品失敗</p>";
+                return;
+            }
+
+            let filteredProducts = products;
+            if (filters) {
+                filteredProducts = products.filter(product => {
+                    if (product.price > filters.maxPrice) {
+                        return false;
+                    }
+                    if (filters.category !== 'all' && product.mainCategory !== filters.category) {
+                        return false;
+                    }
+                    if (filters.subCategories.length > 0 && !filters.subCategories.includes(product.categoryText)) {
+                        return false;
+                    }
+                    return true; 
+                });
+            }
+
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = "<p style='color: var(--color-text-dim);'>目前尚無產品，或無符合篩選條件的產品。</p>";
+                return;
+            }
+
+            grid.innerHTML = ''; 
+            
+            filteredProducts.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                
+                card.innerHTML = `
+                    <div class="product-image" style="background-image: url('${product.image || ''}');"></div>
+                    <div class="product-info">
+                        <h3>${product.title}</h3>
+                        <p>${product.categoryText || product.category}</p>
+                        <div class="product-price">NT$ ${product.price.toLocaleString()}</div>
+                        <div class="product-action-bar">
+                            <input type="number" value="1" min="1" max="99" class="quantity-input" data-id="${product.id}">
+                            <a href="#" class="add-to-cart-btn" data-id="${product.id}">
+                                <i class="fas fa-cart-plus"></i> 加入購物車
+                            </a>
+                        </div>
+                        <a href="shop1.html?id=${product.id}" class="view-details-link">查看詳情 <i class="fas fa-eye"></i></a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        // 💡 結束 頁面特定功能
+        // ====================================
+
+
+        // ====================================
+        // 💡 DOMContentLoaded
+        // ====================================
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- shop.html 專屬邏輯 (保持不變) ---
+            const subCategoryMap = {
+                'sub-cat-a': '有線監視器',
+                'sub-cat-b': '無線監視器',
+                'sub-cat-c': '監視主機 (NVR)', // 修正：符合 admin.html 的預設值
+                'sub-cat-d': '門禁系統',
+                'sub-cat-e': '網路線/電話線',
+                'sub-cat-f': '存儲硬碟',
+                'sub-cat-g': '其他配件'
+            };
+
+            const priceRange = document.getElementById('price-range');
+            const priceValueDisplay = document.getElementById('price-range-value');
+
+            function updatePriceDisplay(value) {
+                if (priceValueDisplay && value) {
+                    priceValueDisplay.textContent = `NT$ ${parseInt(value, 10).toLocaleString()}`;
+                }
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const viewMode = urlParams.get('view');
+            
+            // 💡 修正：使用新的 ID
+            const navCategory = document.getElementById('nav-category-link');
+            const navAllProducts = document.getElementById('nav-all-products-link');
+            const pageTitle = document.getElementById('page-title'); 
+
+            if (viewMode === 'all') {
+                document.body.classList.add('all-products-view');
+                document.title = "所有商品 | 未來科技";
+                if(navAllProducts) navAllProducts.classList.add('active');
+                if(navCategory) navCategory.classList.remove('active');
+                if(pageTitle) pageTitle.textContent = "所有商品"; 
+            } else {
+                document.body.classList.remove('all-products-view'); 
+                document.title = "產品分類 | 未來科技";
+                if(navCategory) navCategory.classList.add('active');
+                if(navAllProducts) navAllProducts.classList.remove('active');
+                if(pageTitle) pageTitle.textContent = "產品分類"; 
+            }
+            // --- 結束 shop.html 專屬邏輯 ---
+
+
+            // --- 1. 統一的登入/註冊視窗 (Modal) 邏輯 (保持不變) ---
+            loginModal = document.getElementById('loginModal');
+            closeButton = document.querySelector('.close-button');
+            loginForm = document.getElementById('loginForm');
+            registerForm = document.getElementById('registerForm');
+            switchToRegisterBtn = document.getElementById('switchToRegister');
+            switchToLoginBtn = document.getElementById('switchToLogin');
+            forgotPasswordLink = document.getElementById('forgotPasswordLink');
+
+            updateLoginStatus();
+
+            if (loginModal && closeButton) { 
+                // ... (Modal 事件監聽 - 保持不變)
+                if(switchToRegisterBtn) switchToRegisterBtn.addEventListener('click', function(e) { e.preventDefault(); switchForm('register'); });
+                if(switchToLoginBtn) switchToLoginBtn.addEventListener('click', function(e) { e.preventDefault(); switchForm('login'); });
+                if(closeButton) closeButton.addEventListener('click', function() { loginModal.style.display = 'none'; });
+                window.addEventListener('click', function(e) { if (e.target == loginModal) { loginModal.style.display = 'none'; } });
+                
+                // 💡 修正：這裡的登入/註冊邏輯是從 index.html 複製過來的，確保功能一致
+                // 登入表單提交 (統一邏輯)
+                if(loginForm) loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const username = document.getElementById('username').value; // 這是 Email 或 'admin'
+                    const password = document.getElementById('password').value;
+
+                    const ADMIN_USER = "admin";
+                    const ADMIN_PASS = "123456"; 
+
+                    if (username === ADMIN_USER && password === ADMIN_PASS) {
+                        alert("管理者登入成功！正在轉跳至後台...");
+                        
+                        try {
+                            sessionStorage.setItem('isLoggedIn', 'admin');
+                            sessionStorage.setItem('currentUserName', 'Administrator');
+                            sessionStorage.setItem('currentUserEmail', ADMIN_USER); // 儲存管理者 Email
+                        } catch(e) {
+                            console.error("無法寫入 sessionStorage:", e);
+                        }
+                        
+                        window.location.href = 'admin.html';
+
+                    } else {
+                        // 檢查是否為一般會員
+                        let storedUsers = [];
+                        try {
+                            const data = localStorage.getItem('userManagementData');
+                            storedUsers = data ? JSON.parse(data) : [];
+                        } catch (e) {
+                            console.error("無法讀取使用者資料:", e);
+                        }
+                        
+                        const foundUser = storedUsers.find(user => 
+                            user.email === username && user.password === password
+                        );
+
+                        if (foundUser) {
+                            // 登入成功
+                            try {
+                                sessionStorage.setItem('isLoggedIn', 'user');
+                                sessionStorage.setItem('currentUserName', foundUser.name);
+                                sessionStorage.setItem('currentUserEmail', foundUser.email);
+                            } catch (e) {
+                                console.error("無法寫入 sessionStorage:", e);
+                                alert("登入失敗：瀏覽器儲存功能異常。");
+                                return;
+                            }
+                            
+                            loginModal.style.display = 'none';
+                            loginForm.reset();
+                            updateLoginStatus(); // 立即更新導覽列 (會變下拉選單)
+                        } else {
+                            // 登入失敗
+                            alert("帳號或密碼錯誤，請重試。");
+                        }
+                    }
+                });
+                
+                
+                // 註冊表單提交 (統一邏輯)
+                if(registerForm) registerForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const name = document.getElementById('reg_name').value.trim();
+                    const email = document.getElementById('reg_email').value.trim();
+                    const password = document.getElementById('reg_password').value;
+                    const passwordConfirm = document.getElementById('reg_password_confirm').value;
+
+                    if (password !== passwordConfirm) {
+                        alert("錯誤：兩次輸入的密碼不一致！");
+                        return;
+                    }
+                    
+                    let storedUsers = [];
+                    try {
+                        const data = localStorage.getItem('userManagementData');
+                        storedUsers = data ? JSON.parse(data) : [];
+                    } catch (e) {
+                        console.error("無法讀取使用者資料:", e);
+                    }
+                    
+                    if (storedUsers.some(user => user.email === email)) {
+                        alert("錯誤：此 Email 帳號已被註冊！");
+                        return;
+                    }
+
+                    const newUser = {
+                        id: storedUsers.length + 1,
+                        name: name,
+                        email: email,
+                        password: password, 
+                        registrationDate: new Date().toLocaleString('zh-TW', { hour12: false })
+                    };
+
+
+                    storedUsers.push(newUser);
+                    
+                    try {
+                        localStorage.setItem('userManagementData', JSON.stringify(storedUsers));
+                    } catch (e) {
+                        console.error("註冊失敗：無法寫入 localStorage:", e);
+                        alert("註冊失敗：瀏覽器儲存功能異常。");
+                        return;
+                    }
+
+                    alert(`註冊成功！歡迎 ${name}！您的帳號已儲存於瀏覽器，可於 admin.html 查閱。`);
+                    
+                    registerForm.reset();
+                    switchForm('login'); 
+                });
+                
+                // 忘記密碼連結的模擬行為
+                if(forgotPasswordLink) forgotPasswordLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert("點擊忘記密碼: 這是模擬功能，您將被導向密碼重設流程。");
+                });
+            }
+            
+            // --- 2. 頁面特定邏輯 (shop.html - 保持不變) ---
+            loadAllProducts(); // 初始載入
+
+            const filterButton = document.querySelector('.sidebar .cta-button');
+            const categorySelect = document.getElementById('category');
+            const subCatCheckboxes = document.querySelectorAll('.filter-group input[type="checkbox"]');
+
+            if (filterButton) { filterButton.addEventListener('click', (e) => { e.preventDefault(); applyFilters(); }); }
+            if (priceRange) {
+                priceRange.addEventListener('input', (e) => { updatePriceDisplay(e.target.value); });
+                priceRange.addEventListener('change', applyFilters); 
+            }
+            if (categorySelect) { categorySelect.addEventListener('change', applyFilters); }
+            subCatCheckboxes.forEach(cb => { cb.addEventListener('change', applyFilters); });
+
+            const quickNavContainer = document.querySelector('.product-quick-nav');
+            if (quickNavContainer) {
+                quickNavContainer.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('quick-nav-button')) {
+                        e.preventDefault();
+                        quickNavContainer.querySelectorAll('.quick-nav-button').forEach(btn => btn.classList.remove('active'));
+                        e.target.classList.add('active');
+                        document.getElementById('category').value = 'all';
+                        const priceRangeInput = document.getElementById('price-range');
+                        if(priceRangeInput) priceRangeInput.value = 20000;
+                        document.querySelectorAll('.filter-group input[type="checkbox"]').forEach(cb => cb.checked = false);
+                        const filterText = e.target.textContent.trim();
+                        if (filterText !== '全部產品') {
+                            const idToCheck = Object.keys(subCategoryMap).find(key => subCategoryMap[key] === filterText);
+                            if (idToCheck) {
+                                const checkbox = document.getElementById(idToCheck);
+                                if (checkbox) { checkbox.checked = true; }
+                            }
+                        }
+                        updatePriceDisplay(20000); 
+                        applyFilters();
+                    }
+                });
+            }
+
+            const productGrid = document.getElementById('product-grid-all');
+            if (productGrid) {
+                productGrid.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('add-to-cart-btn') || e.target.closest('.add-to-cart-btn')) {
+                        e.preventDefault();
+                        const button = e.target.closest('.add-to-cart-btn');
+                        const productId = button.dataset.id;
+                        const actionBAr = button.closest('.product-action-bar');
+                        const quantityInput = actionBAr.querySelector('.quantity-input');
+                        const quantity = quantityInput ? quantityInput.value : 1;
+                        alert(`(模擬功能)\n\n已將 ${quantity} 件產品 (ID: ${productId}) 加入購物車。`);
+                    }
+                });
+            }
+
+            if (priceRange) { updatePriceDisplay(priceRange.value); }
+            // --- 結束 shop.html 專屬邏輯 ---
+
+
+            /* 💡 ------------------------------------------- */
+            /* 💡 替換：使用 index.html 的 Header JS 邏輯 */
+            /* 💡 ------------------------------------------- */
+
+            // --- 3. 統一的 Header 捲動邏輯 ---
+            const header = document.getElementById('mainHeader');
+            let lastScrollTop = 0;
+            const scrollThreshold = 100;
+            const allMegaMenusForScroll = document.querySelectorAll('.mega-menu'); // 💡 修正：取得所有選單
+            
+            if (header) {
+                function hideAllMegaMenus() {
+                    allMegaMenusForScroll.forEach(menu => {
+                        menu.classList.remove('is-visible');
+                    });
+                }
+
+                window.addEventListener('scroll', function() {
+                    let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                    if (currentScrollTop > scrollThreshold) {
+                        if (currentScrollTop > lastScrollTop) {
+                            header.classList.add('header-hidden');
+                            hideAllMegaMenus(); // 捲動時隱藏所有
+                        } 
+                        else {
+                            header.classList.remove('header-hidden');
+                        }
+                    } 
+                    else if (currentScrollTop <= scrollThreshold) {
+                        header.classList.remove('header-hidden');
+                    }
+                    lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+                }, false);
+            }
+
+            // --- 4. 支援多個 Mega Menu 的 JS 邏輯 ---
+            const megaMenuTriggers = document.querySelectorAll('.mega-menu-trigger');
+            const allMegaMenus = document.querySelectorAll('.mega-menu');
+            let hideTimeout; // 統一的隱藏計時器
+
+            megaMenuTriggers.forEach(trigger => {
+                const targetId = trigger.dataset.target;
+                const menu = document.getElementById(targetId);
+
+                if (!menu) return; // 如果找不到對應的選單，則跳過
+
+                trigger.addEventListener('mouseenter', function() {
+                    clearTimeout(hideTimeout);
+                    allMegaMenus.forEach(m => {
+                        if (m !== menu) {
+                            m.classList.remove('is-visible');
+                        }
+                    });
+                    menu.classList.add('is-visible');
+                    if(header) header.classList.remove('header-hidden');
+                });
+
+                trigger.addEventListener('mouseleave', function() {
+                    hideTimeout = setTimeout(() => {
+                        menu.classList.remove('is-visible');
+                    }, 150);
+                });
+            });
+
+            allMegaMenus.forEach(menu => {
+                menu.addEventListener('mouseenter', function() {
+                    clearTimeout(hideTimeout); 
+                });
+                menu.addEventListener('mouseleave', function() {
+                    hideTimeout = setTimeout(() => {
+                        menu.classList.remove('is-visible');
+                    }, 150);
+                });
+            });
+            /* 💡 ------------------------------------------- */
+            /* 💡 結束替換 Header JS 邏輯                */
+            /* ------------------------------------------- */
+        });
+    </script>
+</body>
+</html>
