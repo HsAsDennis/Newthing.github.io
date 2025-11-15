@@ -17,7 +17,6 @@
             --mega-menu-bg: #1A1A1A; /* 巨型菜單背景 */
             --mega-menu-height: 100px; /* 巨型菜單預設高度 */
             --grid-gap-size: 30px; /* 統一網格間距 */
-            /* 💡 購物車【新增】：側邊欄寬度變數 */
             --cart-width: 360px;
         }
 
@@ -103,20 +102,19 @@
             filter: drop-shadow(0 0 8px var(--color-primary));
         }
         
-        /* 💡 RWD (手機版)：<nav> 標籤現在是電腦版專用 */
-        .navbar nav {
+        /* 💡 結構修正：這是「電腦版」選單 */
+        #desktop-nav {
             display: block; /* 電腦版顯示 */
         }
-
-        .nav-links {
+        .nav-links-desktop {
             list-style: none;
             display: flex; 
             flex-shrink: 0; 
         }
-        .nav-links li {
+        .nav-links-desktop li {
             position: relative;
         }
-        .nav-links li a {
+        .nav-links-desktop li a {
             padding: 10px 15px;
             margin: 0 5px;
             font-weight: bold;
@@ -124,23 +122,29 @@
             border-bottom: 2px solid transparent;
             white-space: nowrap; 
         }
-        .nav-links li a:hover, .nav-links li a.active {
+        .nav-links-desktop li a:hover, .nav-links-desktop li a.active {
             color: var(--color-primary);
             border-color: var(--color-primary);
         }
         
-        /* 💡 購物車【修改】：調整 .cart-icon a 的樣式 */
+        /* 💡 結構修正：這是「手機版」選單 (預設隱藏) */
+        .nav-links-mobile {
+            display: none; /* 預設隱藏 */
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            /* RWD 樣式在 @media 區塊中 */
+        }
+        
         .cart-icon a {
             font-size: 1.5em;
             margin-left: 20px;
             color: var(--color-text-light);
-            /* 💡 購物車【新增】：讓計數器定位 */
             position: relative; 
             display: inline-block;
             padding: 5px;
         }
         
-        /* 💡 購物車【新增】：購物車計數器 */
         .cart-item-count {
             position: absolute;
             top: 0px;
@@ -404,7 +408,7 @@
             border-top: 1px dashed #333;
         }
 
-        /* ... (登入下拉選單樣式 - 無變動) ... */
+        /* 💡 結構修正：這是「電腦版」下拉選單 */
         .user-dropdown-menu {
             display: none;
             position: absolute;
@@ -421,7 +425,7 @@
             border-radius: 0 0 5px 5px;
         }
 
-        .nav-links li:hover .user-dropdown-menu {
+        .nav-links-desktop li:hover .user-dropdown-menu {
             display: block;
         }
 
@@ -445,12 +449,12 @@
             cursor: default; 
         }
         
-        .nav-links li a .fa-caret-down {
+        .nav-links-desktop li a .fa-caret-down {
             font-size: 0.8em;
             margin-left: 5px;
             transition: transform 0.2s;
         }
-        .nav-links li:hover > a .fa-caret-down {
+        .nav-links-desktop li:hover > a .fa-caret-down {
              transform: rotate(180deg);
         }
 
@@ -886,25 +890,16 @@
         /* 💡 RWD (手機版)：斷點修正為 1080px */
         @media (max-width: 1080px) {
             
-            /* 💡 RWD (手機版)：修正 - 移除 .navbar nav { display: none; } */
-            /* .navbar nav {
-                display: none; 
-            } */
-            
             /* 💡 RWD (手機版)：隱藏電腦版 NAV，顯示手機版 controls */
-            .navbar nav {
+            #desktop-nav {
                 display: none; /* 電腦版 <nav> 隱藏 */
             }
             .mobile-controls {
                 display: flex; /* 手機版 controls 顯示 */
             }
-            /* 💡 RWD (手機版)：隱藏漢堡選單中的「登入」按鈕 (因為移到外面了) */
-            .nav-links #nav-login-item {
-                display: none;
-            }
-
-            /* === 💡 RWD (手機版)：導航列 === */
-            .nav-links {
+            
+            /* 💡 RWD (手機版)：手機版彈出選單的樣式 */
+            .nav-links-mobile {
                 display: none; /* 預設隱藏 */
                 flex-direction: column; /* 變成垂直 */
                 position: fixed; /* 💡 改為 fixed 才能蓋版 */
@@ -918,44 +913,51 @@
                 overflow-y: auto; /* 內容多時可滾動 */
             }
             
-            .nav-links.is-mobile-open {
+            .nav-links-mobile.is-mobile-open {
                 display: flex; /* 點擊後顯示 */
             }
 
-            .nav-links li {
+            .nav-links-mobile li {
                 width: 100%;
                 text-align: center;
             }
             
-            .nav-links li a {
+            .nav-links-mobile li a {
                 padding: 15px;
                 margin: 0;
                 border-bottom: 1px solid #222; /* 加上分隔線 */
                 display: block; /* 確保 a 佔滿 li */
+                font-weight: bold;
+                color: var(--color-text-light);
+            }
+            .nav-links-mobile li a:hover, .nav-links-mobile li a.active {
+                color: var(--color-primary);
             }
             
             /* 隱藏電腦版的 Mega Menu 觸發 */
-            .nav-links li:hover .user-dropdown-menu {
+            .nav-links-desktop li:hover .user-dropdown-menu {
                 display: none; 
             }
             .mega-menu-trigger .fa-caret-down {
                 display: none; /* 手機上隱藏 v */
             }
-            /* 處理登入後的下拉選單 (手機版) */
+            /* 處理登入後的下拉選單 (手機版) - 這規則現在用不到，但保留 */
+            /*
             .user-dropdown-menu {
                 position: static;
-                display: block; /* 讓它在 .nav-links 中自然展開 */
+                display: block;
                 border: none;
                 box-shadow: none;
-                background-color: #111; /* 稍亮的背景以區分 */
+                background-color: #111; 
                 min-width: 100%;
                 padding: 0;
             }
             .user-dropdown-menu li a {
-                padding-left: 40px; /* 縮排 */
+                padding-left: 40px; 
                 color: var(--color-text-dim);
                 background-color: #111;
             }
+            */
 
             .mobile-nav-toggle {
                 display: block; /* 在手機上顯示 */
@@ -1332,26 +1334,21 @@
                 </a>
             </div>
             
-            <nav>
-                <ul class="nav-links">
+            <nav id="desktop-nav">
+                <ul class="nav-links-desktop">
                     <li><a href="index.html" class="active">首頁</a></li>
-                    
                     <li>
                         <a href="shop.html" class="mega-menu-trigger" data-target="productMenu">產品分類  <i class="fas fa-caret-down"></i></a>
                     </li>
-
                     <li>
                         <a href="shop.html?view=all" class="mega-menu-trigger" data-target="allProductsMenu">所有商品  <i class="fas fa-caret-down"></i></a>
                     </li>
-
                     <li>
                         <a href="#social-feed" class="mega-menu-trigger" data-target="socialMenu">社群動態  <i class="fas fa-caret-down"></i></a>
                     </li>
-
                     <li>
                         <a href="about1.html" class="mega-menu-trigger" data-target="aboutMenu">關於我們  <i class="fas fa-caret-down"></i></a>
                     </li>
-                    
                     <li>
                         <a href="faq_download.html#download-content" class="mega-menu-trigger" data-target="downloadMenu">下載中心  <i class="fas fa-caret-down"></i></a>
                     </li>
@@ -1377,7 +1374,25 @@
                 </button>
             </div>
 
-        </div>
+        </div> <ul class="nav-links-mobile" id="mobileNavMenu">
+            <li><a href="index.html" class="active">首頁</a></li>
+            <li>
+                <a href="shop.html" class="mega-menu-trigger" data-target="productMenu">產品分類</a>
+            </li>
+            <li>
+                <a href="shop.html?view=all" class="mega-menu-trigger" data-target="allProductsMenu">所有商品</a>
+            </li>
+            <li>
+                <a href="#social-feed" class="mega-menu-trigger" data-target="socialMenu">社群動態</a>
+            </li>
+            <li>
+                <a href="about1.html" class="mega-menu-trigger" data-target="aboutMenu">關於我們</a>
+            </li>
+            <li>
+                <a href="faq_download.html#download-content" class="mega-menu-trigger" data-target="downloadMenu">下載中心</a>
+            </li>
+            </ul>
+        
     </header>
 
     <div class="mega-menu" id="productMenu">
@@ -1756,7 +1771,7 @@
                 const isLoggedIn = sessionStorage.getItem('isLoggedIn');
                 const userName = sessionStorage.getItem('currentUserName');
 
-                // 移除舊的監聽器，避免重複綁定
+                // 💡 修正：移除舊的監聽器，避免重複綁定
                 const newMobileLoginIcon = mobileLoginIcon.cloneNode(true);
                 mobileLoginIcon.parentNode.replaceChild(newMobileLoginIcon, mobileLoginIcon);
 
@@ -2584,7 +2599,8 @@
 
             // --- 5. (💡 RWD 新增) 漢堡選單 RWD 邏輯 ---
             const mobileNavToggle = document.getElementById('mobileNavToggle');
-            const navLinks = document.querySelector('.nav-links'); // 💡 抓取 .nav-links
+            // 💡 結構修正：抓取新的手機選單 ID
+            const navLinks = document.getElementById('mobileNavMenu'); 
             
             if (mobileNavToggle && navLinks) {
                 mobileNavToggle.addEventListener('click', function() {
@@ -2612,15 +2628,10 @@
                     // 檢查點擊的是否為一個連結 (a)
                     if (e.target.tagName === 'A' || e.target.closest('a')) {
                         
-                        // 💡 修正：只檢查 .nav-user-trigger (已登入)
-                        const trigger = e.target.closest('.mega-menu-trigger, .nav-user-trigger');
+                        // 💡 結構修正：現在登入按鈕不在這個選單裡了，所以邏輯簡化
+                        const trigger = e.target.closest('.mega-menu-trigger');
 
                         if (trigger) {
-                            // 如果點擊的是使用者選單 (已登入)
-                            if (e.target.closest('.nav-user-trigger')) {
-                                e.preventDefault(); // 阻止 <a href="#"> 跳轉
-                                return; // 保持選單開啟
-                            }
                             // 如果點擊的是 Mega Menu (如 "產品分類")
                             // 則不 return，讓程式碼繼續往下執行以關閉選單
                         } 
