@@ -157,7 +157,7 @@
             transform: scale(1.2);
         }
 
-        /* 💡 RWD (手機版)：新增漢堡選單按鈕 */
+        /* 💡 RWD (手機版)：漢堡選單按鈕 */
         .mobile-nav-toggle {
             display: none; /* 預設隱藏 (電腦版) */
             font-size: 1.8em;
@@ -168,6 +168,22 @@
             margin-left: 15px;
             z-index: 1050; /* 確保在導航列上 */
         }
+        
+        /* 💡 RWD (手機版)：新增 - 手機版控制項群組 */
+        .mobile-controls {
+            display: none; /* 預設隱藏 (電腦版) */
+            align-items: center;
+        }
+        /* 💡 RWD (手機版)：新增 - 手機版登入圖示 */
+        .mobile-login-icon {
+            font-size: 1.5em;
+            margin-left: 15px; /* 與漢堡按鈕間距相同 */
+            color: var(--color-text-light);
+            position: relative;
+            display: inline-block;
+            padding: 5px;
+        }
+
         
         /* ... (Mega Menu 樣式 - 無變動) ... */
         .mega-menu {
@@ -864,8 +880,19 @@
         /* 💡 RWD (手機版)：斷點修正為 1080px */
         @media (max-width: 1080px) {
             
+            /* 💡 RWD (手機版)：隱藏電腦版 NAV，顯示手機版 controls */
+            .navbar nav {
+                display: none;
+            }
+            .mobile-controls {
+                display: flex;
+            }
+            /* 💡 RWD (手機版)：隱藏漢堡選單中的「登入」按鈕 (因為移到外面了) */
+            .nav-links #nav-login-item {
+                display: none;
+            }
+
             /* === 💡 RWD (手機版)：導航列 === */
-            /* (此區塊從 768px 移至 1080px) */
             .nav-links {
                 display: none; /* 預設隱藏 */
                 flex-direction: column; /* 變成垂直 */
@@ -927,13 +954,15 @@
             .navbar {
                 flex-wrap: nowrap;
             }
-            nav {
-                /* 讓 nav (包含 .nav-links) 脫離排版 */
-                position: static; 
+            
+            /* 💡 RWD (手機版)：調整手機版購物車圖示的 margin */
+            .cart-icon a {
+                margin-left: 0; 
             }
             .cart-icon {
-                margin-left: 0; /* 移除電腦版間距 */
+                margin-left: 15px; /* 圖示間的間距 */
             }
+
 
             /* === 既有的 1080px 規則 (Mega Menu) === */
             .mega-menu {
@@ -975,8 +1004,6 @@
         
         @media (max-width: 768px) {
             
-            /* === 💡 RWD (手機版)：導航列的 CSS 已移至 1080px === */
-            
             /* === 既有 RWD 規則 ... === */
             
             .social-content-wrapper {
@@ -1000,9 +1027,13 @@
             .facebook-embed-wrapper {
                 margin: 0 auto;
             }
+            
+            /* 💡 RWD (手機版)：移除此規則，讓產品維持 2 欄 */
+            /*
             .product-grid {
                 grid-template-columns: 1fr;
             }
+            */
 
             /* 💡 RWD (手機版)：修正 Category 排版 */
             .category-item {
@@ -1320,19 +1351,22 @@
                 </ul>
             </nav>
             
-            <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <div class="cart-icon">
-                <a href="#" id="open-cart-button">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-item-count" class="cart-item-count">0</span>
+            <div class="mobile-controls">
+                <a href="#" id="mobileOpenLoginModal" class="mobile-login-icon">
+                    <i class="fas fa-user"></i>
                 </a>
+                <div class="cart-icon">
+                    <a href="#" id="open-cart-button">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-item-count" class="cart-item-count">0</span>
+                    </a>
+                </div>
+                <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
+
         </div>
-
-
     </header>
 
     <div class="mega-menu" id="productMenu">
@@ -1700,17 +1734,23 @@
             }
         }
 
-        // 💡 統一的 updateLoginStatus (支援下拉選單)
+        // 💡 RWD (手機版)：修改 - 統一的 updateLoginStatus (現在會同時更新電腦版和手機版)
         function updateLoginStatus() {
             try {
-                const loginLi = document.getElementById('nav-login-item'); 
-                if (!loginLi) return;
+                const loginLi = document.getElementById('nav-login-item'); // 電腦版
+                const mobileLoginIcon = document.getElementById('mobileOpenLoginModal'); // 手機版
+
+                if (!loginLi || !mobileLoginIcon) return;
 
                 const isLoggedIn = sessionStorage.getItem('isLoggedIn');
                 const userName = sessionStorage.getItem('currentUserName');
 
+                // 移除舊的監聽器，避免重複綁定
+                mobileLoginIcon.removeEventListener('click', openLoginModalHandler);
+
                 if (isLoggedIn === 'user' && userName) {
-                    // 狀態：一般會員登入 (產生下拉選單)
+                    // 狀態：一般會員登入
+                    // 1. 電腦版 (下拉選單)
                     loginLi.innerHTML = `
                         <a href="#" class="nav-user-trigger" id="userMenuTrigger">
                             <i class="fas fa-user-check"></i> ${userName} <i class="fas fa-caret-down"></i>
@@ -1725,9 +1765,20 @@
                     if (logoutBtn) {
                         logoutBtn.addEventListener('click', handleUserLogout);
                     }
+
+                    // 2. 手機版 (圖示連結到會員頁)
+                    mobileLoginIcon.innerHTML = `<i class="fas fa-user-check"></i>`;
+                    mobileLoginIcon.href = "user.html#profile"; 
+                    mobileLoginIcon.addEventListener('click', function(e) {
+                        // 確保點擊後是跳轉頁面
+                        e.preventDefault();
+                        window.location.href = this.href;
+                    });
+
                 } 
                 else if (isLoggedIn === 'admin' && userName) {
-                    // 狀態：管理者登入 (也使用下拉選單)
+                    // 狀態：管理者登入
+                    // 1. 電腦版 (下拉選單)
                     loginLi.innerHTML = `
                         <a href="#" class="nav-user-trigger" id="adminMenuTrigger" style="color: var(--color-primary);">
                             <i class="fas fa-shield-halved"></i> ${userName} <i class="fas fa-caret-down"></i>
@@ -1741,15 +1792,29 @@
                     if (logoutBtn) {
                         logoutBtn.addEventListener('click', handleUserLogout);
                     }
+
+                    // 2. 手機版 (圖示連結到後台)
+                    mobileLoginIcon.innerHTML = `<i class="fas fa-shield-halved" style="color: var(--color-primary);"></i>`;
+                    mobileLoginIcon.href = "admin.html";
+                    mobileLoginIcon.addEventListener('click', function(e) {
+                        // 確保點擊後是跳轉頁面
+                        e.preventDefault();
+                        window.location.href = this.href;
+                    });
                 }
                 else {
-                    // 狀態：登出 (還原為登入按鈕)
+                    // 狀態：登出
+                    // 1. 電腦版 (按鈕)
                     loginLi.innerHTML = `<a href="#" id="openLoginModal"><i class="fas fa-user"></i> 登入</a>`;
-                    
                     const loginBtn = document.getElementById('openLoginModal');
                     if (loginBtn) {
                         loginBtn.addEventListener('click', openLoginModalHandler);
                     }
+
+                    // 2. 手機版 (圖示開啟 modal)
+                    mobileLoginIcon.innerHTML = `<i class="fas fa-user"></i>`;
+                    mobileLoginIcon.href = "#";
+                    mobileLoginIcon.addEventListener('click', openLoginModalHandler);
                 }
             } catch(e) {
                 console.error("更新登入狀態失敗:", e);
@@ -2067,7 +2132,7 @@
                     const link = document.createElement('a');
                     link.href = img.link;
                     link.className = 'hero-slide-link';
-                    // 如果連結是外部的，自動開新分頁
+                    // 如果連結是外部的，自動開 new 分頁
                     if (img.link.startsWith('http')) {
                         link.target = '_blank';
                         link.rel = 'noopener noreferrer';
@@ -2143,7 +2208,8 @@
             
             // --- 1. 統一的登入/註冊視窗 (Modal) 邏輯 ---
             loginModal = document.getElementById('loginModal');
-            // 注意：openLoginModalBtn 是動態產生的，在 updateLoginStatus 裡綁定
+            // 注意：openLoginModalBtn (電腦版) 是動態產生的，在 updateLoginStatus 裡綁定
+            // mobileOpenLoginModal (手機版) 也一樣
             closeButton = document.querySelector('.close-button');
             loginForm = document.getElementById('loginForm');
             registerForm = document.getElementById('registerForm');
@@ -2152,6 +2218,7 @@
             forgotPasswordLink = document.getElementById('forgotPasswordLink');
 
             // 頁面載入時，立即更新一次登入狀態 (處理F5刷新)
+            // 💡 RWD (手機版)：此函式現在會同時更新電腦版和手機版的登入按鈕
             updateLoginStatus();
 
             if (loginModal && closeButton) {
@@ -2536,7 +2603,7 @@
                     // 檢查點擊的是否為一個連結 (a)
                     if (e.target.tagName === 'A' || e.target.closest('a')) {
                         
-                        // 💡 修正：增加對 #openLoginModal 的檢查
+                        // 💡 修正：增加對 #openLoginModal (舊的) 和 .nav-user-trigger 的檢查
                         const trigger = e.target.closest('.mega-menu-trigger, .nav-user-trigger, #openLoginModal');
 
                         if (trigger) {
@@ -2545,10 +2612,9 @@
                                 e.preventDefault(); // 阻止 <a href="#"> 跳轉
                                 return; // 保持選單開啟
                             }
-                            // 如果點擊的是登入按鈕
+                            // 如果點擊的是登入按鈕 (已登出)
                             if (e.target.closest('#openLoginModal')) {
-                                // 保持選單開啟，並允許 modal 彈出
-                                // (openLoginModalHandler 會另外觸發)
+                                // 保持選單開啟，並允許 modal 彈出 (由 openLoginModalHandler 觸發)
                                 return; 
                             }
                             // 如果點擊的是 Mega Menu (如 "產品分類")
