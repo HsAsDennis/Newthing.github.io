@@ -2375,3 +2375,200 @@
                         toggleCart(); // 關閉購物車
                         
                         // 手動觸發登入視窗 (使用已有的變數和函式)
+                        if(loginModal) { 
+                            loginModal.style.display = 'block'; 
+                            switchForm('login'); // 確保顯示的是登入表單
+                        }
+                        return; // 終止結帳流程
+                    }
+
+                    // 3. 已登入：執行原有的結帳模擬
+                    const userName = sessionStorage.getItem('currentUserName') || '會員';
+                    alert(`（模擬功能）\n\n${userName} 您好！\n即將前往結帳頁面...`);
+                    toggleCart(); // 關閉購物車
+                });
+            }
+            
+            // 綁定購物車內部的動態事件 (移除、改數量)
+            const cartItemsContainer = document.getElementById('cart-items-container');
+            if (cartItemsContainer) {
+                cartItemsContainer.addEventListener('click', function(e) {
+                    // 點擊移除按鈕
+                    if (e.target.classList.contains('remove-from-cart-btn') || e.target.closest('.remove-from-cart-btn')) {
+                        e.preventDefault();
+                        const button = e.target.closest('.remove-from-cart-btn');
+                        const productId = button.dataset.id;
+                        if (confirm("確定要從購物車移除此商品嗎？")) {
+                            removeFromCart(productId);
+                        }
+                    }
+                });
+                
+                cartItemsContainer.addEventListener('change', function(e) {
+                    // 更改數量輸入框
+                    if (e.target.classList.contains('cart-quantity-input')) {
+                        const input = e.target;
+                        const productId = input.dataset.id;
+                        const newQuantity = parseInt(input.value, 10);
+                        updateCartQuantity(productId, newQuantity);
+                    }
+                });
+            }
+            
+            
+            // --- 3. 統一的 Header 捲動邏輯 ---
+            const header = document.getElementById('mainHeader');
+            let lastScrollTop = 0;
+            const scrollThreshold = 100;
+            
+            if (!header) return;
+
+            const allMegaMenusForScroll = document.querySelectorAll('.mega-menu');
+            
+            function hideAllMegaMenus() {
+                allMegaMenusForScroll.forEach(menu => {
+                    menu.classList.remove('is-visible');
+                });
+            }
+
+            window.addEventListener('scroll', function() {
+                let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                // 💡 購物車【修改】：如果購物車是打開的，不要隱藏 header
+                const sideCart = document.getElementById('side-cart');
+                if (sideCart && sideCart.classList.contains('is-open')) {
+                    header.classList.remove('header-hidden');
+                    lastScrollTop = currentScrollTop;
+                    return;
+                }
+                
+                if (currentScrollTop > scrollThreshold) {
+                    if (currentScrollTop > lastScrollTop) {
+                        header.classList.add('header-hidden');
+                        hideAllMegaMenus(); 
+                    } 
+                    else {
+                        header.classList.remove('header-hidden');
+                    }
+                } 
+                else if (currentScrollTop <= scrollThreshold) {
+                    header.classList.remove('header-hidden');
+                }
+
+                lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+            }, false);
+
+            // --- 4. 支援多個 Mega Menu ---
+            const megaMenuTriggers = document.querySelectorAll('.mega-menu-trigger');
+            const allMegaMenus = document.querySelectorAll('.mega-menu');
+            let hideTimeout; // 統一的隱藏計時器
+
+            megaMenuTriggers.forEach(trigger => {
+                const targetId = trigger.dataset.target;
+                const menu = document.getElementById(targetId);
+
+                if (!menu) return; // 如果找不到對應的選單，則跳過
+
+                trigger.addEventListener('mouseenter', function() {
+                    clearTimeout(hideTimeout); // 清除任何待處理的隱藏
+                    
+                    // 隱藏所有其他已開啟的選單
+                    allMegaMenus.forEach(m => {
+                        if (m !== menu) {
+                            m.classList.remove('is-visible');
+                        }
+                    });
+                    
+                    // 顯示目標選單
+                    menu.classList.add('is-visible');
+                    header.classList.remove('header-hidden'); // 確保 Header 可見
+                });
+
+                trigger.addEventListener('mouseleave', function() {
+                    // 滑鼠離開觸發器時，啟動計時器準備隱藏
+                    hideTimeout = setTimeout(() => {
+                        menu.classList.remove('is-visible');
+                    }, 150);
+                });
+            });
+
+            // 幫所有的 Mega Menu 區塊也加上監聽，讓滑鼠移入時保持開啟
+            allMegaMenus.forEach(menu => {
+                menu.addEventListener('mouseenter', function() {
+                    clearTimeout(hideTimeout); // 滑鼠進入選單，取消隱藏
+                });
+
+                menu.addEventListener('mouseleave', function() {
+                    // 滑鼠離開選單時，啟動計時器準備隱藏
+                    hideTimeout = setTimeout(() => {
+                        menu.classList.remove('is-visible');
+                    }, 150);
+                });
+            });
+
+            // --- 5. (💡 RWD 新增) 漢堡選單 RWD 邏輯 ---
+            const mobileNavToggle = document.getElementById('mobileNavToggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (mobileNavToggle && navLinks) {
+                mobileNavToggle.addEventListener('click', function() {
+                    navLinks.classList.toggle('is-mobile-open');
+                    
+                    // 變更圖示 (漢堡 <-> X)
+                    const icon = mobileNavToggle.querySelector('i');
+                    if (navLinks.classList.contains('is-mobile-open')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                        // 💡 開啟選單時，禁止背景滾動 (可選)
+                        // document.body.style.overflow = 'hidden'; 
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                        // 💡 恢復背景滾動 (可選)
+                        // document.body.style.overflow = '';
+                    }
+                });
+            }
+            
+            // 點擊手機版選單中的連結後，自動關閉選單
+            if (navLinks) {
+                navLinks.addEventListener('click', function(e) {
+                    // 檢查點擊的是否為一個連結 (a)
+                    if (e.target.tagName === 'A' || e.target.closest('a')) {
+                        
+                        // 💡 修正：增加對 #openLoginModal 的檢查
+                        const trigger = e.target.closest('.mega-menu-trigger, .nav-user-trigger, #openLoginModal');
+
+                        if (trigger) {
+                            // 如果點擊的是使用者選單 (已登入)
+                            if (e.target.closest('.nav-user-trigger')) {
+                                e.preventDefault(); // 阻止 <a href="#"> 跳轉
+                                return; // 保持選單開啟
+                            }
+                            // 如果點擊的是登入按鈕
+                            if (e.target.closest('#openLoginModal')) {
+                                // 保持選單開啟，並允許 modal 彈出
+                                // (openLoginModalHandler 會另外觸發)
+                                return; 
+                            }
+                            // 如果點擊的是 Mega Menu (如 "產品分類")
+                            // 則不 return，讓程式碼繼續往下執行以關閉選單
+                        } 
+
+                        // 點擊一般連結或 Mega Menu 連結後，關閉選單
+                        navLinks.classList.remove('is-mobile-open');
+                        const icon = mobileNavToggle.querySelector('i');
+                        if(icon) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                        // document.body.style.overflow = ''; // 恢復滾動
+                    }
+                });
+            }
+            
+        });
+    </script>
+
+</body>
+</html>
