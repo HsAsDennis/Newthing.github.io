@@ -81,7 +81,8 @@
         }
         .navbar {
             display: flex;
-            justify-content: space-between;
+            /* 💡 修正：使用 space-between (因為現在有 3 個項目了) */
+            justify-content: space-between; 
             align-items: center;
             height: 100%;
             flex-wrap: nowrap; 
@@ -136,6 +137,7 @@
             /* RWD 樣式在 @media 區塊中 */
         }
         
+        /* 💡 修正：購物車圖示 (電腦/手機共用) */
         .cart-icon a {
             font-size: 1.5em;
             margin-left: 20px;
@@ -459,7 +461,7 @@
         }
 
         /* ==================================== */
-        /* 💡 1. 修正：Hero 區域樣式 (為輪播做準備) */
+        /* 💡 (此區塊為 index.html 樣式) */
         /* ==================================== */
         #hero {
             height: 90vh;
@@ -478,13 +480,10 @@
             transition: background-image 0.5s ease; /* 漸變效果 */
         }
         
-        /* 💡 2. 新增：Hero 靜態內容 (Fallback) */
         #heroFallback {
-            /* flex 父元素會自動置中此內容 */
             z-index: 5; /* 低於輪播 */
         }
         
-        /* 靜態文字的樣式 (原 #hero h2, #hero p) */
         #heroFallback h2 {
             font-size: 3.5em;
             margin-bottom: 20px;
@@ -523,7 +522,6 @@
             box-shadow: none;
         }
 
-        /* 💡 3. 新增：輪播容器 (預設隱藏) */
         .hero-slideshow-container {
             display: none; /* 預設隱藏 */
             position: absolute;
@@ -552,14 +550,12 @@
             opacity: 1;
         }
 
-        /* 讓 slide <a> 可點擊 */
         .hero-slide-link { 
             display: block;
             width: 100%;
             height: 100%;
         }
 
-        /* 圖片上的文字內容 */
         .hero-slide-content {
             position: absolute;
             bottom: 12%;
@@ -596,7 +592,6 @@
             margin-bottom: 0;
         }
         
-        /* 💡 4. 新增：Dots 導航 */
         .hero-dots-container {
             position: absolute;
             bottom: 30px;
@@ -624,7 +619,7 @@
         }
         
         
-        /* ... (Categories 樣式 - 無變動) ... */
+        /* ... (Categories 樣式 - index.html) ... */
         #categories {
             background-color: #1A1A1A;
             border-top: 1px dashed var(--color-secondary);
@@ -705,7 +700,7 @@
             box-shadow: 0 0 10px var(--color-primary);
         }
         
-        /* ... (Social Feed 樣式 - 無變動) ... */
+        /* ... (Social Feed 樣式 - index.html) ... */
         #social-feed {
             background-color: #000000;
             padding: 20px 0; 
@@ -800,7 +795,7 @@
             height: auto !important; 
         }
         
-        /* ... (Product Grid 樣式 - 無變動) ... */
+        /* ... (Product Grid 樣式 - index.html) ... */
         #products {
             background-color: var(--color-dark-bg);
         }
@@ -885,7 +880,104 @@
             font-size: 0.9em;
         }
         
-        /* ... (Responsive Adjustments) ... */
+        
+        /* ==================================== */
+        /* 💡 (此區塊為 shop.html 專屬樣式，從原檔案保留) */
+        /* ==================================== */
+        #product-list-page {
+            padding: 30px 0 80px; 
+            background-color: #050505;
+            min-height: calc(100vh - var(--header-height) - 150px); 
+        }
+        .plp-header { margin-bottom: 30px; border-bottom: 2px solid var(--color-secondary); padding-bottom: 10px; }
+        .plp-header h1 { font-size: 2.5em; color: var(--color-primary); }
+        .plp-layout { display: flex; gap: 30px; align-items: flex-start; }
+        .sidebar {
+            flex-basis: 250px; flex-shrink: 0; background-color: #151515;
+            padding: 20px; border-radius: 8px; border: 1px solid #222;
+            position: sticky; top: calc(var(--header-height) + 20px); 
+        }
+        .sidebar h3 { color: var(--color-primary); margin-bottom: 15px; padding-bottom: 5px; border-bottom: 1px dashed #333; }
+        .filter-group { margin-bottom: 20px; }
+        .filter-group label { display: block; margin-bottom: 8px; color: var(--color-text-light); font-weight: bold; }
+        .filter-group input[type="range"], .filter-group select { width: 100%; padding: 8px; background-color: #000; color: var(--color-text-light); border: 1px solid var(--color-secondary); border-radius: 3px; appearance: none; }
+        .filter-group div label { 
+            display: inline-flex; 
+            align-items: center; 
+            margin-bottom: 5px; 
+            font-weight: normal; 
+            margin-right: 15px; 
+        }
+        .filter-group input[type="checkbox"] { margin-right: 8px; filter: hue-rotate(180deg) brightness(1.5); }
+        .price-range-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .price-range-label label { margin-bottom: 0; font-weight: bold; }
+        #price-range-value {
+            font-weight: bold;
+            color: var(--color-primary);
+            background-color: #000;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        .main-content { flex-grow: 1; }
+        .sort-bar { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 20px; padding: 10px; background-color: #111111; border-radius: 5px; }
+        .sort-bar label, .sort-bar select { margin-left: 15px; color: var(--color-text-dim); }
+        
+        .product-info .quantity-input {
+            width: 60px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--color-secondary);
+            background: #000;
+            color: white;
+            text-align: center;
+        }
+        .product-info .add-to-cart-btn {
+            flex-grow: 1;
+            display: inline-block;
+            padding: 8px 10px;
+            background-color: var(--color-secondary);
+            color: white !important;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .product-info .add-to-cart-btn:hover {
+            background-color: #0099cc;
+        }
+        .product-info .view-details-link {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--color-text-dim);
+        }
+        .product-info .view-details-link:hover {
+            color: var(--color-primary);
+        }
+        .load-more-container { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px dashed #333; }
+        .product-quick-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; padding: 15px 0; border-top: 1px solid #333; border-bottom: 1px solid #333; background-color: #111111; }
+        .quick-nav-button { padding: 8px 15px; background-color: #222; color: var(--color-text-light); border: 1px solid var(--color-secondary); border-radius: 4px; font-size: 0.95em; font-weight: 500; cursor: pointer; transition: background-color 0.3s, border-color 0.3s, color 0.3s; flex-shrink: 0; }
+        .quick-nav-button:hover { background-color: var(--color-secondary); color: var(--color-dark-bg); }
+        .quick-nav-button.active { background-color: var(--color-primary); color: var(--color-dark-bg) !important; border-color: var(--color-primary); box-shadow: 0 0 8px rgba(0, 255, 255, 0.5); }
+        .all-products-view .sidebar,
+        .all-products-view .product-quick-nav {
+            display: none; 
+        }
+        .all-products-view .product-grid {
+            grid-template-columns: repeat(4, 1fr); 
+        }
+        /* 結束 shop.html 專屬樣式 */
+        
+        
+        /* ... (Responsive Adjustments - 來自 index.html) ... */
         
         /* 💡 RWD (手機版)：斷點修正為 1080px */
         @media (max-width: 1080px) {
@@ -894,8 +986,14 @@
             #desktop-nav {
                 display: none; /* 電腦版 <nav> 隱藏 */
             }
+            /* 💡 修正：購物車圖示在 1080px 斷點下隱藏 (因為它在 mobile-controls 裡了) */
+            .cart-icon {
+                display: none;
+            }
+            
             .mobile-controls {
                 display: flex; /* 手機版 controls 顯示 */
+                /* 💡 修正：手機版 controls 包含 登入, 購物車, 漢堡 */
             }
             
             /* 💡 RWD (手機版)：手機版彈出選單的樣式 */
@@ -941,24 +1039,7 @@
             .mega-menu-trigger .fa-caret-down {
                 display: none; /* 手機上隱藏 v */
             }
-            /* 處理登入後的下拉選單 (手機版) - 這規則現在用不到，但保留 */
-            /*
-            .user-dropdown-menu {
-                position: static;
-                display: block;
-                border: none;
-                box-shadow: none;
-                background-color: #111; 
-                min-width: 100%;
-                padding: 0;
-            }
-            .user-dropdown-menu li a {
-                padding-left: 40px; 
-                color: var(--color-text-dim);
-                background-color: #111;
-            }
-            */
-
+            
             .mobile-nav-toggle {
                 display: block; /* 在手機上顯示 */
             }
@@ -968,12 +1049,13 @@
                 flex-wrap: nowrap;
             }
             
-            /* 💡 RWD (手機版)：調整手機版購物車圖示的 margin */
-            .cart-icon a {
-                margin-left: 0; 
-            }
-            .cart-icon {
+            /* 💡 RWD (手機版)：新增 - 手機版 controls 內部的 cart-icon */
+            .mobile-controls .cart-icon {
+                display: block; /* 確保它顯示 */
                 margin-left: 15px; /* 圖示間的間距 */
+            }
+            .mobile-controls .cart-icon a {
+                margin-left: 0; /* 重置 margin */
             }
 
 
@@ -1007,11 +1089,27 @@
                 left: auto;
                 right: 0;
             }
+            
+            /* 💡 RWD (shop.html 專屬) */
+            .all-products-view .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         @media (max-width: 960px) {
             .product-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            
+            /* 💡 RWD (shop.html 專屬) */
+            .plp-layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                flex-basis: auto;
+                position: static; /* 解除 sticky */
+                margin-bottom: 30px;
             }
         }
         
@@ -1041,13 +1139,6 @@
                 margin: 0 auto;
             }
             
-            /* 💡 RWD (手機版)：移除此規則，讓產品維持 2 欄 */
-            /*
-            .product-grid {
-                grid-template-columns: 1fr;
-            }
-            */
-
             /* 💡 RWD (手機版)：修正 Category 排版 */
             .category-item {
                 flex-direction: column; /* 垂直堆疊 */
@@ -1093,6 +1184,15 @@
             }
             .side-cart.is-open {
                 right: 0;
+            }
+            
+            /* 💡 RWD (shop.html 專屬) */
+            .all-products-view .product-grid {
+                grid-template-columns: 1fr;
+            }
+            /* 💡 RWD (shop.html 專屬) */
+            .product-grid {
+                grid-template-columns: 1fr; /* 手機上變單欄 */
             }
         }
         
@@ -1359,41 +1459,50 @@
                 </ul>
             </nav>
             
+            <div class="cart-icon">
+                <a href="#" id="open-cart-button">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-item-count" class="cart-item-count">0</span>
+                </a>
+            </div>
+            
             <div class="mobile-controls">
                 <a href="#" id="mobileOpenLoginModal" class="mobile-login-icon">
                     <i class="fas fa-user"></i>
                 </a>
+                
                 <div class="cart-icon">
-                    <a href="#" id="open-cart-button">
+                    <a href="#" id="open-cart-button-mobile">
                         <i class="fas fa-shopping-cart"></i>
-                        <span id="cart-item-count" class="cart-item-count">0</span>
+                        <span id="cart-item-count-mobile" class="cart-item-count">0</span>
                     </a>
                 </div>
+                
                 <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
 
-        </div> <ul class="nav-links-mobile" id="mobileNavMenu">
-            <li><a href="index.html" class="active">首頁</a></li>
-            <li>
-                <a href="shop.html" class="mega-menu-trigger" data-target="productMenu">產品分類</a>
-            </li>
-            <li>
-                <a href="shop.html?view=all" class="mega-menu-trigger" data-target="allProductsMenu">所有商品</a>
-            </li>
-            <li>
-                <a href="#social-feed" class="mega-menu-trigger" data-target="socialMenu">社群動態</a>
-            </li>
-            <li>
-                <a href="about1.html" class="mega-menu-trigger" data-target="aboutMenu">關於我們</a>
-            </li>
-            <li>
-                <a href="faq_download.html#download-content" class="mega-menu-trigger" data-target="downloadMenu">下載中心</a>
-            </li>
-            </ul>
-        
-    </header>
+        </div> </header> <ul class="nav-links-mobile" id="mobileNavMenu">
+        <li><a href="index.html" class="active">首頁</a></li>
+        <li>
+            <a href="shop.html" class="mega-menu-trigger" data-target="productMenu">產品分類</a>
+        </li>
+        <li>
+            <a href="shop.html?view=all" class="mega-menu-trigger" data-target="allProductsMenu">所有商品</a>
+        </li>
+        <li>
+            <a href="#social-feed" class="mega-menu-trigger" data-target="socialMenu">社群動態</a>
+        </li>
+        <li>
+            <a href="about1.html" class="mega-menu-trigger" data-target="aboutMenu">關於我們</a>
+        </li>
+        <li>
+            <a href="faq_download.html#download-content" class="mega-menu-trigger" data-target="downloadMenu">下載中心</a>
+        </li>
+    </ul>
+
+
 
     <div class="mega-menu" id="productMenu">
         <div class="container mega-menu-content">
@@ -1491,7 +1600,6 @@
             </div>
         </div>
     </div>
-
     <section id="hero">
 
         <div class="container" id="heroFallback">
@@ -1637,7 +1745,6 @@
             </div>
         </div>
     </section>
-
     <footer class="main-footer">
         <div class="container">
             <h4>新事科技 | XINSHIKEJI</h4>
@@ -1719,6 +1826,7 @@
         </div>
 
     </div>
+    
     <script>
         // ====================================
         // 💡 統一的登入/註冊全域變數與函式
@@ -1760,7 +1868,7 @@
             }
         }
 
-        // 💡 RWD (手機版)：修改 - 統一的 updateLoginStatus (現在會同時更新電腦版和手機版)
+        // 💡 RWD (手機版)：修正 - 這是來自 shop.html 的完整版
         function updateLoginStatus() {
             try {
                 const loginLi = document.getElementById('nav-login-item'); // 電腦版
@@ -1909,26 +2017,33 @@
             }
         }
         
-        // 更新頭部購物車圖示的計數器
+        // 💡 RWD (手機版)：修正 - 這是來自 shop.html 的完整版
         function updateCartCount() {
             const cart = getCart();
-            const countElement = document.getElementById('cart-item-count');
-            if (!countElement) return;
-
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            
-            countElement.textContent = totalItems;
-            
-            if (totalItems > 0) {
-                countElement.style.display = 'block';
-                // 觸發一個小動畫
-                countElement.classList.add('updated');
-                setTimeout(() => {
-                    countElement.classList.remove('updated');
-                }, 200);
-            } else {
-                countElement.style.display = 'none';
-            }
+
+            // 1. 電腦版 (及 1080px 以下的 mobile-controls 內)
+            const countElement = document.getElementById('cart-item-count');
+            // 2. 手機版 (RWD 結構中的)
+            const countElementMobile = document.getElementById('cart-item-count-mobile');
+
+            // 更新函式
+            const updateDisplay = (element) => {
+                if (!element) return;
+                element.textContent = totalItems;
+                if (totalItems > 0) {
+                    element.style.display = 'block';
+                    element.classList.add('updated');
+                    setTimeout(() => {
+                        element.classList.remove('updated');
+                    }, 200);
+                } else {
+                    element.style.display = 'none';
+                }
+            };
+
+            updateDisplay(countElement);
+            updateDisplay(countElementMobile);
         }
 
         // 渲染側邊購物車的內容
@@ -2026,6 +2141,7 @@
                 renderCart(); // 立即重新渲染
             }
         }
+
         
         // 💡 -------------------------------------------
         // 💡 結束 購物車全域邏輯
@@ -2421,17 +2537,25 @@
             // 💡 購物車【新增】：綁定所有購物車相關按鈕
             updateCartCount(); // 頁面載入時，更新一次計數器
 
+            // 💡 RWD (手機版)：修正 - 綁定電腦 + 手機 兩個按鈕
             const openCartBtn = document.getElementById('open-cart-button');
+            const openCartBtnMobile = document.getElementById('open-cart-button-mobile');
             const closeCartBtn = document.getElementById('close-cart-btn');
             const cartOverlay = document.getElementById('cart-overlay');
             const checkoutBtn = document.getElementById('checkout-button');
 
+            const openCartHandler = (e) => {
+                e.preventDefault();
+                toggleCart();
+            };
+
             if (openCartBtn) {
-                openCartBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    toggleCart();
-                });
+                openCartBtn.addEventListener('click', openCartHandler);
             }
+            if (openCartBtnMobile) {
+                openCartBtnMobile.addEventListener('click', openCartHandler);
+            }
+
             if (closeCartBtn) {
                 closeCartBtn.addEventListener('click', (e) => {
                     e.preventDefault();
