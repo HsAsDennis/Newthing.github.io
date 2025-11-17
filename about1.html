@@ -13,6 +13,8 @@
             --color-secondary: #0077B6; /* 深藍色 (輔助色) */
             --color-text-light: #F0F0F0; /* 淺色文字 */
             --color-text-dim: #AAAAAA; /* 昏暗文字 */
+            --color-danger: #FF6B6B; /* 💡 新增：錯誤/必要 顏色 */
+            --color-success: #4CAF50; /* 💡 新增：成功 顏色 */
             --header-height: 80px; /* 定義 Header 預設高度 */
             --mega-menu-bg: #1A1A1A; /* 巨型菜單背景 */
             --mega-menu-height: 100px; /* 巨型菜單預設高度 */
@@ -384,6 +386,15 @@
         .modal-login-btn:active {
             transform: scale(0.99);
         }
+        
+        /* 💡 新增：禁用按鈕的樣式 */
+        .modal-login-btn:disabled {
+            background-color: var(--color-text-dim);
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
 
         .modal-links {
             display: flex;
@@ -973,6 +984,32 @@
         /* 💡 ================================= */
         /* 💡 來自 about1.html 的專屬 CSS */
         /* 💡 ================================= */
+
+        /* 💡 新增：諮詢表單的 .form-grid (來自 admin.html) */
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+        }
+        /* 💡 新增：諮詢表單的 textarea 樣式 (同 .input-group input) */
+        .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--color-secondary);
+            border-radius: 5px;
+            background-color: #0A0A0A;
+            color: var(--color-text-light);
+            transition: border-color 0.3s;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 確保字體一致 */
+            line-height: 1.6;
+        }
+        /* 💡 新增：諮詢表單的 :focus 樣式 */
+        .input-group textarea:focus {
+            border-color: var(--color-primary);
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+
         .about-banner {
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('images/about-banner.jpg') no-repeat center center; /* 假設圖片路徑 */
             background-size: cover;
@@ -1132,6 +1169,7 @@
         }
 
         .stat-item .number {
+
             font-size: 2.5em;
             font-weight: bold;
             color: white;
@@ -1576,6 +1614,9 @@
             }
             
             /* 💡 RWD (about1.html 專屬) */
+            .form-grid {
+                grid-template-columns: 1fr; /* 💡 新增：RWD */
+            }
             .about-banner { height: 250px; }
             .banner-title-text { font-size: 2.5em; }
             .leader-profile {
@@ -2136,8 +2177,41 @@
                     <h3>現在就開始您的智能科技升級計畫</h3>
                     <a href="https://forms.gle/baS8kWJrUJt3HPpm7" target="_blank" class="cta-button"><i class="fas fa-calendar-check"></i> 預約免費現場勘查</a>
                 </div>
-            </div>
 
+                <div class="quick-consult-form" style="margin-top: 40px; padding-top: 30px; border-top: 1px dashed var(--color-secondary);">
+                  <h3 style="color: white; font-size: 1.8em; text-align: center; margin-bottom: 25px;">或 快速諮詢登記</h3>
+                    <p style="text-align: center; color: var(--color-text-dim); margin-bottom: 30px;">
+                      填寫以下表單，我們將盡速與您聯繫
+                  </p>
+                    <form id="quickConsultForm" style="max-width: 700px; margin: 0 auto;">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="consult_name">您的姓名 <span style="color:var(--color-danger)">*</span></label>
+                                <input type="text" id="consult_name" name="consult_name" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="consult_phone">聯絡電話 <span style="color:var(--color-danger)">*</span></label>
+                                <input type="text" id="consult_phone" name="consult_phone" required>
+                            </div>
+                      </div>
+                        <div class="input-group">
+                            <label for="consult_email">Email</label>
+                            <input type="email" id="consult_email" name="consult_email">
+                      </div>
+                        <div class="input-group">
+                            <label for="consult_message">諮詢內容 (選填)</label>
+                            <textarea id="consult_message" name="consult_message" rows="4"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="modal-login-btn" style="width: 100%;"><i class="fas fa-paper-plane"></i> 送出諮詢</button>
+                        
+                        <div id="consultFormSuccess" style="display:none; color: var(--color-success); text-align: center; margin-top: 15px; font-weight: bold;">
+                            <i class="fas fa-check-circle"></i> 感謝您的登記！我們將盡快與您聯繫。
+                        </div>
+                  </form>
+                </div>
+                </div>
+            
             <section id="recommended-products">
                 <h2 style="text-align: center; color: var(--color-primary); margin-bottom: 40px; font-size: 2.5em; border-bottom: 3px solid var(--color-secondary); padding-bottom: 15px;">推薦產品 (點擊加入購物車)</h2>
                 <div class="product-grid" id="product-list">
@@ -3052,6 +3126,69 @@
             }
             
             
+            // 💡 --- 3B. (新增) 快速諮詢表單 (about1.html) ---
+            const quickConsultForm = document.getElementById('quickConsultForm');
+            if (quickConsultForm) {
+                
+                quickConsultForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const name = document.getElementById('consult_name').value;
+                    const phone = document.getElementById('consult_phone').value;
+                    const email = document.getElementById('consult_email').value;
+                    const message = document.getElementById('consult_message').value;
+
+                    if (!name.trim() || !phone.trim()) {
+                        alert('請務必填寫您的姓名與聯絡電話。');
+                        return;
+                    }
+
+                    // 格式化日期 (與 admin.html 註冊會員時一致)
+                    const submissionDate = new Date().toLocaleString('zh-TW', { hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+
+                    const newRegistration = {
+                        date: submissionDate,
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        message: message || '(無)' // 確保有值
+                    };
+
+                    let registrations = [];
+                    try {
+                        const data = localStorage.getItem('USER_REGISTRATIONS');
+                        registrations = data ? JSON.parse(data) : [];
+                    } catch (err) {
+                        console.error("無法讀取諮詢資料:", err);
+                        registrations = [];
+                    }
+
+                    registrations.push(newRegistration);
+
+                    try {
+                        // 儲存回 admin.html 會讀取的位置
+                        localStorage.setItem('USER_REGISTRATIONS', JSON.stringify(registrations));
+                        
+                        // 顯示成功訊息
+                        const successMsg = document.getElementById('consultFormSuccess');
+                        if (successMsg) successMsg.style.display = 'block';
+                        
+                        // 禁用按鈕並清空表單
+                        const submitButton = quickConsultForm.querySelector('button[type="submit"]');
+                        if(submitButton) {
+                            submitButton.disabled = true;
+                            submitButton.innerHTML = '<i class="fas fa-check"></i> 已收到您的登記';
+                        }
+                        quickConsultForm.reset();
+                        
+                    } catch (err) {
+                        console.error("儲存諮詢資料失敗:", err);
+                        alert("送出失敗，瀏覽器儲存功能異常。");
+                    }
+                });
+            }
+
+
             // --- 4. 統一的 Header 捲動邏輯 ---
             const header = document.getElementById('mainHeader');
             let lastScrollTop = 0;
